@@ -17,6 +17,8 @@ import com.example.pokedex.databinding.PokemonCard2Binding
 import com.example.pokedex.databinding.PokemonCardBinding
 import com.example.pokedex.model.Pokemon
 import com.example.pokedex.utility.ColorUtils
+import com.example.pokedex.utility.Constants
+import com.example.pokedex.utility.TypeUtils
 import com.example.pokedex.viewmodel.MainViewModel
 import kotlinx.serialization.Serializable
 
@@ -68,21 +70,40 @@ class PokemonAdapter() : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>(
         holder.binding.apply {
             tvPokemonName.text = pokemon.name
             tvPokemonId.text = pokemon.id
-            val pokemonType = pokemon.typeofpokemon[0]
+            val pokemonType1 = pokemon.typeofpokemon[0]
 
-            val color = ColorUtils.getColorForString(pokemonType)
+            val color = ColorUtils.getColorForString(pokemonType1)
+            cvMainCard.background.setTint(Color.parseColor("#FF$color"))
 
-            cvMainCard.background.setTint(Color.parseColor(color))
+            // Setting 1st Type Card
+            tvPokemonType1.text = pokemonType1
+            val pokemonType1Icon = TypeUtils.typeMap[pokemonType1]
+            cvPokemonType1.background.setTint(Color.parseColor("#FF$color"))
+            Glide.with(holder.itemView)
+                .load(pokemonType1Icon)
+                .into(ivPokemonType1)
 
-            tvPokemonType1.text = pokemon.typeofpokemon[0]
+            // Setting 2nd Type Card
             if(pokemon.typeofpokemon.size > 1){
                 cvPokemonType2.visibility = View.VISIBLE
-                tvPokemonType2.text = pokemon.typeofpokemon[1]
+
+                val pokemonType2 = pokemon.typeofpokemon[1]
+                tvPokemonType2.text = pokemonType2
+
+                val color2 = ColorUtils.getColorForString(pokemonType2)
+                cvPokemonType2.background.setTint(Color.parseColor("#88$color2"))
+
+                val pokemonType2Icon = TypeUtils.typeMap[pokemonType2]
+//                ivPokemonType2.setImageResource(pokemonType2Icon!!)
+                Glide.with(holder.itemView)
+                    .load(pokemonType2Icon)
+                    .into(ivPokemonType2)
             }
         }
 
         holder.itemView.setOnClickListener {
             onItemClick.invoke(pokemon, "", holder.binding.ivPokemonThumb)
         }
+
     }
 }

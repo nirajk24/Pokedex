@@ -20,22 +20,4 @@ class Constants {
     val Steel = "B7B7CE"
     val Fairy = "D685AD"
 
-    val pokemonTypeUrl = mapOf(
-        "bug" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/bug.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dragon" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dragon.png",
-        "electric" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/electric.png",
-        "fairy" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dafairy.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-        "dark" to "https://github.com/HybridShivam/Pokemon/blob/master/assets/Others/type-icons/png/dark.png",
-    )
 }
