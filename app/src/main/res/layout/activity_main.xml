@@ -22,21 +22,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingVertical="6dp"
-            android:paddingHorizontal="8dp"
+            android:paddingHorizontal="12dp"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tvHome"
+                android:id="@+id/tvApptitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/myfont"
+                android:paddingTop="@dimen/_2sdp"
+                android:text="Poké"
+                style="@style/text_head"
+                android:textSize="@dimen/_24ssp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvApptitle2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/myfont"
                 android:paddingTop="@dimen/_2sdp"
-                android:text="PokeDex"
-                android:textColor="@color/text_black"
+                android:text="Dex"
+                android:textColor="#E1DC3535"
                 android:textSize="@dimen/_24ssp"
                 android:textStyle="bold" />
-
 
             <RelativeLayout
                 android:id="@+id/rlProfile"
@@ -73,7 +83,7 @@
         <LinearLayout
             android:id="@+id/imgSearch"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_32sdp"
+            android:layout_height="50dp"
             android:orientation="horizontal"
             android:layout_marginHorizontal="8dp"
             app:layout_constraintEnd_toEndOf="parent"

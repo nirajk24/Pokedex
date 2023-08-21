@@ -8,11 +8,31 @@
         <item name="android:windowLightStatusBar">true</item>
 
         <item name="android:navigationBarColor">
-            @android:color/transparent
+            @color/white
         </item>
 
         <item name="android:windowTranslucentNavigation">false</item>
     </style>
 
     <style name="Theme.Pokedex" parent="Base.Theme.Pokedex" />
+
+    <style name="text_head">
+        <item name="android:textColor">@color/text_head_black</item>
+    </style>
+    <style name="text_sub_head">
+        <item name="android:textColor">@color/text_sub_head_black</item>
+    </style>
+    <style name="text_content">
+        <item name="android:textColor">@color/text_content_black</item>
+    </style>
+
+    <style name="tint">
+        <item name="android:tint">@color/white</item>
+        <item name="android:src">@drawable/white_gradient_top_to_bottom</item>
+    </style>
+
+    <style name="tint_arrow">
+        <item name="android:tint">@color/black</item>
+        <item name="android:src">@drawable/ic_arrow_forward</item>
+    </style>
 </resources>

@@ -30,5 +30,26 @@
 
 
 
+    <color name="text_head_white">#FFFFFF</color>
+    <color name="text_sub_head_white">#C3FFFFFF</color>
+    <color name="text_content_white">#7EFFFFFF</color>
+
+
+    <color name="text_head_black">#000000</color>
+    <color name="text_sub_head_black">#BC000000</color>
+    <color name="text_content_black">#65000000</color>
+
+    <color name="transparent">#00FFFFFF</color>
+
+    <color name="bad">#E65D5D</color>
+    <color name="good">#F546D54E</color>
+    <color name="neutral">#F5D6B140</color>
+
+
+
+
+
+
+
 
 </resources>

@@ -3,5 +3,33 @@
     <style name="Base.Theme.Pokedex" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+<!--        <item name="android:windowLightStatusBar">true</item>-->
+
+        <item name="android:navigationBarColor">
+            @color/cardview_dark_background
+        </item>
+
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
+
+    <style name="text_head">
+        <item name="android:textColor">@color/text_head_white</item>
+    </style>
+    <style name="text_sub_head">
+        <item name="android:textColor">@color/text_sub_head_white</item>
+    </style>
+    <style name="text_content">
+        <item name="android:textColor">@color/text_content_white</item>
+    </style>
+    <style name="tint">
+        <item name="android:tint">@color/cardview_dark_background</item>
+        <item name="android:src">@drawable/white_gradient_top_to_bottom</item>
+    </style>
+
+    <style name="tint_arrow">
+        <item name="android:tint">@color/white</item>
+        <item name="android:src">@drawable/ic_arrow_forward</item>
     </style>
 </resources>

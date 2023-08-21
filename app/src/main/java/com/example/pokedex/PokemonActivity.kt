@@ -28,11 +28,11 @@ class PokemonActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityPokemonBinding
 
-    private lateinit var pokemon : Pokemon
+    private lateinit var pokemonList: List<Pokemon>
 
     private val tabsArray = arrayOf("About", "Stats", "Evolution")
 
-    private val pokemonMvvm : PokemonViewModel by lazy{
+    val pokemonMvvm : PokemonViewModel by lazy{
         val pokemonViewModelFactory = PokemonViewModelFactory(application)
         ViewModelProvider(this, pokemonViewModelFactory)[PokemonViewModel::class.java]
     }
@@ -57,14 +57,14 @@ class PokemonActivity : AppCompatActivity() {
 
     private fun initializeTopImage() {
 
-        val pokemonType1 = pokemon.typeofpokemon[0]
+        val pokemonType1 = pokemonList[0].typeofpokemon[0]
         val color = ColorUtils.getColorForString(pokemonType1)
         val pokemonType1Icon = TypeUtils.typeMap[pokemonType1]
 
         binding.apply {
-            tvPokemonName.text = pokemon.name
-            tvPokemonName2.text = pokemon.name
-            tvPokemonId.text = pokemon.id
+            tvPokemonName.text = pokemonList[0].name
+            tvPokemonName2.text = pokemonList[0].name
+            tvPokemonId.text = pokemonList[0].id
 
             mainBackground.setBackgroundColor(Color.parseColor("#DA$color"))
 
@@ -78,10 +78,10 @@ class PokemonActivity : AppCompatActivity() {
             .into(binding.ivPokemonType1)
 
         // Setting 2nd Type Card
-        if(pokemon.typeofpokemon.size > 1){
+        if(pokemonList[0].typeofpokemon.size > 1){
             binding.cvPokemonType2.visibility = View.VISIBLE
 
-            val pokemonType2 = pokemon.typeofpokemon[1]
+            val pokemonType2 = pokemonList[0].typeofpokemon[1]
             binding.tvPokemonType2.text = pokemonType2
 
             val color2 = ColorUtils.getColorForString(pokemonType2)
@@ -100,12 +100,13 @@ class PokemonActivity : AppCompatActivity() {
         }
     }
 
+    // Getting intent data and setting animation
     private fun setImageTransitionAnim() {
         val extras = intent.extras
         val transitionName = extras?.getString("TRANSITION_NAME")
         val data = extras?.getString("POKEMON")
-        pokemon = Json.decodeFromString<Pokemon>(data!!)
-        pokemonMvvm.setCurrentPokemon(pokemon)
+        pokemonList = Json.decodeFromString<List<Pokemon>>(data!!)
+        pokemonMvvm.setCurrentPokemonList(pokemonList)
         ViewCompat.setTransitionName(binding.ivPokemonImage, transitionName)
 
         // Start the shared element transition
@@ -120,7 +121,7 @@ class PokemonActivity : AppCompatActivity() {
 
 
         Glide.with(binding.ivPokemonImage)
-            .load(pokemon.imageurl)
+            .load(pokemonList[0].imageurl)
             .into(binding.ivPokemonImage)
     }
 

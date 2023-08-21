@@ -28,5 +28,9 @@ object ColorUtils {
         return colorMap[str] ?: "#FFFFFF"
     }
 
+    fun getAllKeys(): List<String>{
+        return colorMap.keys.toList()
+    }
+
 
 }

@@ -1,60 +1,103 @@
 package com.example.pokedex.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
+import com.example.pokedex.PokemonActivity
 import com.example.pokedex.R
+import com.example.pokedex.databinding.FragmentEvolutionBinding
+import com.example.pokedex.model.Pokemon
+import com.example.pokedex.utility.ColorUtils
+import com.example.pokedex.viewmodel.PokemonViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [EvolutionFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class EvolutionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var binding: FragmentEvolutionBinding
+    private lateinit var pokemonMvvm: PokemonViewModel
+
+    private lateinit var pokemonEvolutionList : List<Pokemon>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_evolution, container, false)
+    ): View {
+        binding = FragmentEvolutionBinding.inflate(layoutInflater, container, false)
+
+        pokemonMvvm = (activity as PokemonActivity).pokemonMvvm
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EvolutionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EvolutionFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        pokemonEvolutionList = pokemonMvvm.getCurrentPokemonList()
+
+        val mainColor = ColorUtils.getColorForString(pokemonEvolutionList[0].typeofpokemon[0])
+        binding.tvHead1.setTextColor(Color.parseColor("#$mainColor"))
+
+        setFirstEvolution()
+        setSecondEvolution(mainColor)
     }
+
+
+    private fun setFirstEvolution() {
+        if(pokemonEvolutionList.size >= 2){ // At least 3 elements exist - 1st element is curr Pokemon
+            binding.layoutNoEvolution.visibility = View.INVISIBLE
+            binding.layoutEvolution1.visibility = View.VISIBLE
+            binding.apply {
+                tvPokemonName1.text = pokemonEvolutionList[1].name
+                tvPokemonName2.text = pokemonEvolutionList[2].name
+                val reason = pokemonEvolutionList[2].reason.trim()
+                tvReason1.text = reason.substring(1, reason.length - 1)
+
+                Glide.with(requireActivity())
+                    .load(pokemonEvolutionList[1].imageurl)
+                    .into(ivPokemon1)
+
+                Glide.with(requireActivity())
+                    .load(pokemonEvolutionList[2].imageurl)
+                    .into(ivPokemon2)
+            }
+        }
+    }
+
+    private fun setSecondEvolution(mainColor: String) {
+        if(pokemonEvolutionList.size > 3){ // At least 4 elements exist - 1st element is curr Pokemon
+            binding.apply {
+                layoutEvolution2.visibility = View.VISIBLE
+                tvPokemonName.visibility = View.VISIBLE
+                tvPokemonName.text = pokemonEvolutionList[0].name
+
+
+                tvPokemonName.setTextColor(Color.parseColor("#$mainColor"))
+            }
+
+            binding.apply {
+                tvPokemonName3.text = pokemonEvolutionList[2].name
+                tvPokemonName4.text = pokemonEvolutionList[3].name
+                val reason2 = pokemonEvolutionList[3].reason.trim()
+                tvReason2.text = reason2.substring(1, reason2.length - 1)
+
+                Glide.with(requireActivity())
+                    .load(pokemonEvolutionList[2].imageurl)
+                    .into(ivPokemon3)
+
+                Glide.with(requireActivity())
+                    .load(pokemonEvolutionList[3].imageurl)
+                    .into(ivPokemon4)
+            }
+        }
+    }
+
+
 }

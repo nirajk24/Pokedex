@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pokedex.adapter.PokemonAdapter
 import com.example.pokedex.databinding.ActivityMainBinding
+import com.example.pokedex.model.Pokemon
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.viewmodel.MainViewModel
 import com.example.pokedex.viewmodel.MainViewModelFactory
@@ -95,7 +96,8 @@ class MainActivity : AppCompatActivity() {
     private fun onPokemonItemClick(){
         pokemonAdapter.onItemClick = { pokemon, transitionName, sharedImageView ->
             val intent = Intent(this, PokemonActivity::class.java)
-            val data = Json.encodeToString(pokemon)
+            val pokemonList = getPokemonEvolutionList(pokemon)
+            val data = Json.encodeToString(pokemonList)
             intent.apply {
                 putExtra("TRANSITION_NAME", ViewCompat.getTransitionName(sharedImageView))
                 putExtra("POKEMON", data)
@@ -108,6 +110,29 @@ class MainActivity : AppCompatActivity() {
             )
             startActivity(intent, options.toBundle())
         }
+    }
+
+    private fun getPokemonEvolutionList(pokemon: Pokemon): List<Pokemon> {
+        val pokemonList = mutableListOf<Pokemon>()
+        pokemonList.add(pokemon)
+        for(id in pokemon.evolutions){
+            val idInt = getIdFromString(id)
+            mainMvvm.observePokemonListLiveData().observe(this, Observer {
+                pokemonList.add(it[idInt - 1])
+            })
+        }
+
+        return pokemonList
+    }
+
+    private fun getIdFromString(id: String): Int {
+        var idInt = 0
+        val length = id.length
+        for(i in 1 until length){
+            idInt = (idInt * 10) + id[i].toString().toInt()
+        }
+
+        return idInt
     }
 
     private fun intentToProfile() {
@@ -130,7 +155,7 @@ class MainActivity : AppCompatActivity() {
 
     // Loading Pokemon data from Json
     private fun initializeData() {
-        val inputStream = resources.openRawResource(R.raw.pokemons)
+        val inputStream = resources.openRawResource(R.raw.pokemon)
         mainMvvm.initializePokemon(inputStream)
     }
 

@@ -50,7 +50,7 @@
         android:ellipsize="none"
         android:singleLine="true"
         android:fadingEdge="vertical"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:fontFamily="@font/outline"
@@ -66,8 +66,9 @@
         android:id="@+id/ivBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="12dp"
+        android:padding="5dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -75,10 +76,10 @@
 
     <ImageView
         android:id="@+id/ivPokemonImage"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginStart="32dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginStart="16dp"
         android:scaleType="fitCenter"
         android:transitionName="transition_image"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,13 +94,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="90dp"/>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="38dp"
         android:layout_marginStart="16dp"
         app:layout_constraintTop_toTopOf="@id/ivPokemonImage"
         app:layout_constraintBottom_toBottomOf="@id/ivPokemonImage"
