@@ -34,4 +34,12 @@
         <item name="android:tint">@color/white</item>
         <item name="android:src">@drawable/ic_arrow_forward</item>
     </style>
+
+    <style name="tint_arrow_up">
+        <item name="android:tint">@color/white</item>
+    </style>
+
+    <style name="search_box_background">
+        <item name="android:background">@drawable/search_box_background_dark</item>
+    </style>
 </resources>

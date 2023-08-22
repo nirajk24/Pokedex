@@ -1,14 +1,28 @@
 package com.example.pokedex
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.Rect
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.Log
+import android.view.KeyEvent
+import android.view.View
+import android.widget.ImageView
+import android.widget.SearchView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -16,10 +30,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedex.adapter.PokemonAdapter
 import com.example.pokedex.databinding.ActivityMainBinding
 import com.example.pokedex.model.Pokemon
@@ -71,13 +89,15 @@ class MainActivity : AppCompatActivity() {
 //        fab.layoutParams = layoutParams
 
 //
-//        binding.btnCamera.setOnClickListener {
-//            requestCameraPermission()
-//        }
-//
-//        binding.btnStorage.setOnClickListener {
-//            requestStoragePermission()
-//        }
+        binding.btnCamera.setOnClickListener {
+            requestCameraPermission()
+            hideFabButtons()
+        }
+
+        binding.btnStorage.setOnClickListener {
+            requestStoragePermission()
+            hideFabButtons()
+        }
 
         initializeData()
 
@@ -88,6 +108,162 @@ class MainActivity : AppCompatActivity() {
 
 
         onPokemonItemClick()
+
+        implementSearchView()
+
+
+
+        setUpButton()
+
+        setFabButton()
+
+
+    }
+
+    private fun setFabButton() {
+        binding.apply {
+            fabPokeball.setOnClickListener {
+                if(btnCamera.isVisible or btnStorage.isVisible){
+                    hideFabButtons()
+                } else {
+                   showFabButtons()
+                }
+            }
+        }
+    }
+
+    private fun showFabButtons() {
+        binding.apply {
+            btnCamera.visibility = View.VISIBLE
+            btnStorage.visibility = View.VISIBLE
+            fabPokeball.setImageResource(R.drawable.ic_close)
+        }
+    }
+
+    private fun hideFabButtons() {
+        binding.apply {
+            btnCamera.visibility = View.GONE
+            btnStorage.visibility = View.GONE
+            fabPokeball.setImageResource(R.drawable.pokeball)
+        }
+    }
+
+
+    private fun implementSearchView() {
+        val searchView = binding.searchView
+        val searchIcon = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_button)
+        val closeIcon = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+        val searchPlate = searchView.findViewById<View>(androidx.appcompat.R.id.search_plate)
+
+        searchIcon.setOnClickListener {
+            // Expand animation
+            searchView.isIconified = false
+            searchPlate.alpha = 0f
+            searchPlate.animate().alpha(1f).setDuration(300).start()
+        }
+
+        closeIcon.setOnClickListener {
+            // Collapse animation
+            searchPlate.animate().alpha(0f).setDuration(300).withEndAction {
+                searchView.isIconified = true
+                searchPlate.alpha = 1f
+            }.start()
+        }
+
+        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Handle query submission
+                searchView.clearFocus()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Animate the search plate based on query text
+                val filteredPokemons = mainMvvm.filterPokemons(newText.orEmpty())
+
+                pokemonAdapter.differ.submitList(filteredPokemons)
+                return true
+            }
+        })
+
+        setUpHint()
+    }
+
+    private fun setUpHint() {
+
+        val hints = listOf("Search Charmander", "Search Fire", "Search #004",
+            "Search Chikorita", "Search Grass", "Search #152",
+            "Search Palkia", "Search Water", "Search #484") // List of hints to cycle through
+        var currentHintIndex = 0
+
+        val handler = Handler()
+        val color1 = Color.parseColor("#CCEE8130") // Fire Color
+        val color2 =  Color.parseColor("#CC7AC74C") // Grass color
+        val color3 =  Color.parseColor("#CC6390F0") // Water color
+
+        val initialColor = Color.parseColor("#CCEE8130") // Initial color
+
+        binding.searchView.queryHint = SpannableString(hints[currentHintIndex]).apply {
+            setSpan(ForegroundColorSpan(initialColor), 6, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
+        handler.post(object : Runnable {
+            override fun run() {
+                currentHintIndex = (currentHintIndex + 1) % hints.size
+
+                val currentColor = when (currentHintIndex) {
+                    0, 1, 2 -> color1
+                    3, 4, 5 -> color2
+                    else -> color1
+                }
+
+                binding.searchView.queryHint = SpannableString(hints[currentHintIndex]).apply {
+                    setSpan(ForegroundColorSpan(currentColor), 6, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                  coloredHint.setSpan(StyleSpan(Typeface.BOLD), 6, hint.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                }
+
+                handler.postDelayed(this, 4000) // Repeat every 4 seconds
+            }
+        })
+
+        // Stop the handler when you're done
+        binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                handler.removeCallbacksAndMessages(null)
+            }
+        }
+    }
+
+
+    private fun setUpButton() {
+        val layoutManager = LinearLayoutManager(this)
+        binding.rvPokemon.layoutManager = layoutManager
+
+        binding.rvPokemon.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                // Get the first visible item position
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                // Toggle the visibility of the button based on the scroll position
+                binding.btnGoToTop.visibility = if (firstVisibleItemPosition > 0) View.VISIBLE else View.GONE
+            }
+        })
+
+        binding.btnGoToTop.setOnClickListener {
+            binding.rvPokemon.smoothScrollToPosition(0)
+//            binding.rvPokemon.scrollToPosition(0)
+            binding.btnGoToTop.visibility = View.GONE
+        }
+
+        binding.btnGoToTop.setOnLongClickListener {
+            binding.rvPokemon.scrollToPosition(0)
+            binding.btnGoToTop.visibility = View.GONE
+            true
+        }
+
 
     }
 
@@ -146,10 +322,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent, options.toBundle())
         }
     }
-
-
-
-
     // <-- Permission and Camera Section -->
 
     // Launching Camera
@@ -166,6 +338,8 @@ class MainActivity : AppCompatActivity() {
                 // Handle the captured image
                 val base64 = mainMvvm.convertToByte64(selectedImageBitmap!!)
                 mainMvvm.getPokemonNameByImage(base64)  // Sets the Current Pokemon
+
+                TODO("Dialog Page Appears")
             }
         }
 
@@ -186,6 +360,8 @@ class MainActivity : AppCompatActivity() {
                         // Handle the selected image
                         val base64 = mainMvvm.convertToByte64(selectedImageBitmap!!)
                         mainMvvm.getPokemonNameByImage(base64) // Sets the Current Pokemon
+
+                        TODO("Dialog Page Appears")
                     }
                 } catch (e: IOException) {
                     e.printStackTrace()

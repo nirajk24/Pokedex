@@ -33,10 +33,12 @@ class MainViewModel(
     private var pokemonList = MutableLiveData<List<PokemonSmall>>()
     fun observePokemonListLiveData() = pokemonList
 
-    var transitionName: String? = null
-    
-    private var isLogin = false
-    fun isLogin() = isLogin
+    private lateinit var currentPokemon : PokemonSmall
+    fun getCurrentPokemon() = currentPokemon
+    fun setCurrentPokemon(pokemon: PokemonSmall){
+        currentPokemon = pokemon
+    }
+
 
     fun initializePokemon(inputStream : InputStream){
         val jsonString = inputStream.bufferedReader().use { it.readText() }
@@ -44,18 +46,6 @@ class MainViewModel(
         val json = Json { ignoreUnknownKeys = true }
         val pokemonArray: Array<PokemonSmall> = json.decodeFromString(jsonString)
         pokemonList.value = pokemonArray.toList()
-    }
-
-
-
-
-    // Converting Image to Byte64 String format
-    fun convertToByte64(bitmap: Bitmap): String {
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        val imageBytes: ByteArray = byteArrayOutputStream.toByteArray()
-
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT)
     }
 
 
@@ -105,6 +95,30 @@ class MainViewModel(
 
         return idInt
     }
+
+    fun filterPokemons(searchQuery: String): List<PokemonSmall> {
+        val pokemonList = observePokemonListLiveData().value
+        if (pokemonList != null) {
+            return pokemonList.filter { pokemon ->
+                pokemon.name.contains(searchQuery, ignoreCase = true) ||
+                        pokemon.id.contains(searchQuery, ignoreCase = true) ||
+                        pokemon.typeofpokemon.any { type -> type.contains(searchQuery, ignoreCase = true) }
+            }
+        }
+        return emptyList()
+    }
+
+
+
+    // Converting Image to Byte64 String format
+    fun convertToByte64(bitmap: Bitmap): String {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        val imageBytes: ByteArray = byteArrayOutputStream.toByteArray()
+
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT)
+    }
+
 
 
 
