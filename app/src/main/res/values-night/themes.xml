@@ -12,6 +12,8 @@
         </item>
 
         <item name="android:windowTranslucentNavigation">false</item>
+
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="text_head">

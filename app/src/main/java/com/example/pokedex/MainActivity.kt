@@ -89,13 +89,48 @@ class MainActivity : AppCompatActivity() {
 
         onPokemonItemClick()
 
-
     }
 
+    // Loading Pokemon data from Json
+    private fun initializeData() {
+        val inputStream = resources.openRawResource(R.raw.pokemon_small)
+        mainMvvm.initializePokemon(inputStream)
+    }
+
+    // Profile section
+    private fun intentToProfile() {
+        binding.rlProfile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    // Preparing Pokemon Recycler View
+    private fun prepareRecyclerView() {
+        pokemonAdapter = PokemonAdapter()
+        binding.rvPokemon.apply {
+//            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            adapter = pokemonAdapter
+            setHasFixedSize(true)
+            setItemViewCacheSize(40)
+        }
+    }
+
+    // Observing data and submitting the list
+    private fun initializeRecyclerView() {
+        mainMvvm.observePokemonListLiveData().observe(this, Observer {pokemonList ->
+            pokemonAdapter.differ.submitList(pokemonList)
+        })
+    }
+
+
+
+    // Set om click listener on Pokemon Item
     private fun onPokemonItemClick(){
         pokemonAdapter.onItemClick = { pokemon, transitionName, sharedImageView ->
             val intent = Intent(this, PokemonActivity::class.java)
-            val pokemonList = getPokemonEvolutionList(pokemon)
+            val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
             Log.d("CHECK", pokemonList.toString())
             val data = Json.encodeToString(pokemonList)
             intent.apply {
@@ -112,74 +147,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getPokemonEvolutionList(pokemon: PokemonSmall): List<Pokemon> {
-//        val pokemonList = mutableListOf<Pokemon>()
-//        pokemonList.add(pokemon)
-//        for(id in pokemon.evolutions){
-//            val idInt = getIdFromString(id)
-//            mainMvvm.observePokemonListLiveData().observe(this, Observer {
-//                pokemonList.add(it[idInt - 1])
-//            })
-//        }
-
-        // Read csv and get list
-        val specificLineIndices = getEvolutionIds(pokemon)
-
-        return readCsvLineByIndex(this, R.raw.pokemon_csv, specificLineIndices.toMutableList())
-    }
-
-    private fun getEvolutionIds(pokemon: PokemonSmall) : List<Int>{
-        val pokemonEvolutionIds = mutableListOf<Int>()
-        pokemonEvolutionIds.add(getIdFromString(pokemon.id))
-        for(id in pokemon.evolutions){
-            val idInt = getIdFromString(id)
-            pokemonEvolutionIds.add(idInt)
-        }
-        Log.d("CHECK", pokemonEvolutionIds.toString())
-        return pokemonEvolutionIds
-    }
-
-    private fun getIdFromString(id: String): Int {
-        var idInt = 0
-        val length = id.length
-        for(i in 1 until length){
-            idInt = (idInt * 10) + id[i].toString().toInt()
-        }
-
-        return idInt
-    }
-
-    private fun intentToProfile() {
-        binding.rlProfile.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
-    private fun initializeRecyclerView() {
-        mainMvvm.observePokemonListLiveData().observe(this, Observer {pokemonList ->
-            pokemonAdapter.differ.submitList(pokemonList)
-        })
-    }
 
 
-    // Loading Pokemon data from Json
-    private fun initializeData() {
-        val inputStream = resources.openRawResource(R.raw.pokemon_small)
-        mainMvvm.initializePokemon(inputStream)
-    }
 
-    // Preparing Pokemon Recycler View
-    private fun prepareRecyclerView() {
-        pokemonAdapter = PokemonAdapter()
-        binding.rvPokemon.apply {
-//            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = pokemonAdapter
-            setHasFixedSize(true)
-            setItemViewCacheSize(40)
-        }
-    }
+    // <-- Permission and Camera Section -->
 
     // Launching Camera
     private val takePictureLauncher: ActivityResultLauncher<Intent> =

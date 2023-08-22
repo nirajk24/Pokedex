@@ -7,10 +7,12 @@ import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.pokedex.R
 import com.example.pokedex.model.Base64Image
 import com.example.pokedex.model.Pokemon
 import com.example.pokedex.model.PokemonSmall
+import com.example.pokedex.model.readCsvLineByIndex
 import com.example.pokedex.pojo.PokemonName
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.retrofit.RetrofitInstance
@@ -27,11 +29,6 @@ class MainViewModel(
     private val application: Application
 ) : AndroidViewModel(application) {
 
-    private var currentPokemon = arrayOf<Pokemon>()
-    fun setCurrentPokemon(pokemon : Pokemon){
-        currentPokemon[0] = pokemon
-    }
-    fun getCurrentPokemon() = currentPokemon
 
     private var pokemonList = MutableLiveData<List<PokemonSmall>>()
     fun observePokemonListLiveData() = pokemonList
@@ -72,7 +69,6 @@ class MainViewModel(
 
                     val text = pokemonName.class_name.toString() + "\n" + pokemonName.prob
 //                    binding.tvBase64.text = text
-
                 }
             }
 
@@ -82,6 +78,34 @@ class MainViewModel(
             }
         })
     }
+
+    fun getPokemonEvolutionList(pokemon: PokemonSmall): List<Pokemon> {
+        // Read csv and get list
+        val specificLineIndices = getEvolutionIds(pokemon)
+
+        return readCsvLineByIndex(application, R.raw.pokemon_csv, specificLineIndices.toMutableList())
+    }
+
+    private fun getEvolutionIds(pokemon: PokemonSmall) : List<Int>{
+        val pokemonEvolutionIds = mutableListOf<Int>()
+        pokemonEvolutionIds.add(getIdFromString(pokemon.id))
+        for(id in pokemon.evolutions){
+            val idInt = getIdFromString(id)
+            pokemonEvolutionIds.add(idInt)
+        }
+        Log.d("CHECK", pokemonEvolutionIds.toString())
+        return pokemonEvolutionIds
+    }
+    private fun getIdFromString(id: String): Int {
+        var idInt = 0
+        val length = id.length
+        for(i in 1 until length){
+            idInt = (idInt * 10) + id[i].toString().toInt()
+        }
+
+        return idInt
+    }
+
 
 
 }
