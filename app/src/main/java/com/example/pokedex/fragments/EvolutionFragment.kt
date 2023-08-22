@@ -51,7 +51,7 @@ class EvolutionFragment : Fragment() {
 
 
     private fun setFirstEvolution() {
-        if(pokemonEvolutionList.size >= 2){ // At least 3 elements exist - 1st element is curr Pokemon
+        if(pokemonEvolutionList.size > 2){ // At least 3 elements exist - 1st element is curr Pokemon
             binding.layoutNoEvolution.visibility = View.INVISIBLE
             binding.layoutEvolution1.visibility = View.VISIBLE
             binding.apply {

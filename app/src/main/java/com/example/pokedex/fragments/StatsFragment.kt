@@ -109,8 +109,12 @@ class StatsFragment : Fragment() {
             tvSpeed.text = pokemon.speed.toString()
             setProgressBar(pbSpeed, pokemon.speed, 150)
 
-            tvTotal.text = pokemon.total_points.toString()
-            setProgressBar(pbTotal, pokemon.total_points, 900)
+            var total = 0
+            pokemon.apply {
+                total = speed + hp +  attack + defense + sp_attack + sp_defense
+            }
+            tvTotal.text = total.toString()
+            setProgressBar(pbTotal, total, 900)
         }
     }
 

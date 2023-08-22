@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -59,6 +60,7 @@ class PokemonActivity : AppCompatActivity() {
 
         val pokemonType1 = pokemonList[0].typeofpokemon[0]
         val color = ColorUtils.getColorForString(pokemonType1)
+        Log.d("COLOR", color)
         val pokemonType1Icon = TypeUtils.typeMap[pokemonType1]
 
         binding.apply {

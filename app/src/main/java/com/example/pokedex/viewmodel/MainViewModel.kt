@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.pokedex.R
 import com.example.pokedex.model.Base64Image
 import com.example.pokedex.model.Pokemon
+import com.example.pokedex.model.PokemonSmall
 import com.example.pokedex.pojo.PokemonName
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.retrofit.RetrofitInstance
@@ -32,7 +33,7 @@ class MainViewModel(
     }
     fun getCurrentPokemon() = currentPokemon
 
-    private var pokemonList = MutableLiveData<List<Pokemon>>()
+    private var pokemonList = MutableLiveData<List<PokemonSmall>>()
     fun observePokemonListLiveData() = pokemonList
 
     var transitionName: String? = null
@@ -44,10 +45,8 @@ class MainViewModel(
         val jsonString = inputStream.bufferedReader().use { it.readText() }
 
         val json = Json { ignoreUnknownKeys = true }
-        val pokemonArray: Array<Pokemon> = json.decodeFromString(jsonString)
+        val pokemonArray: Array<PokemonSmall> = json.decodeFromString(jsonString)
         pokemonList.value = pokemonArray.toList()
-
-        Log.d("CHECK", pokemonList.toString())
     }
 
 

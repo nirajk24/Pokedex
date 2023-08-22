@@ -1,6 +1,14 @@
 package com.example.pokedex.model
 
+import android.content.Context
 import kotlinx.serialization.Serializable
+
+import com.opencsv.CSVReaderBuilder
+import com.opencsv.CSVParserBuilder
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.LineNumberReader
+
 
 @Serializable
 data class Pokemon(
@@ -51,26 +59,95 @@ data class Pokemon(
     val base_friendship: String = "??",
 
     val effectiveness: List<Int>
-
-//    val against_bug: Double,
-//    val against_dark: Double,
-//    val against_dragon: Double,
-//    val against_electric: Double,
-//    val against_fairy: Double,
-//    val against_fight: Double,
-//    val against_fire: Double,
-//    val against_flying: Double,
-//    val against_ghost: Double,
-//    val against_grass: Double,
-//    val against_ground: Double,
-//    val against_ice: Double,
-//    val against_normal: Double,
-//    val against_poison: Double,
-//    val against_psychic: Double,
-//    val against_rock: Double,
-//    val against_steel: Double,
-//    val against_water: Double,
-
-
-
 )
+
+fun readCsvLineByIndex(context: Context, resourceId: Int, indices: List<Int>): List<Pokemon> {
+    val resultList = mutableListOf<Pokemon>()
+
+    for (index in indices) {
+        val inputStream = context.resources.openRawResource(resourceId)
+        val reader = CSVReaderBuilder(InputStreamReader(inputStream))
+            .withCSVParser(CSVParserBuilder().withSeparator(',').build())
+            .build()
+
+        var lineNumber = 0
+        var line: Array<String>?
+
+        while (reader.readNext().also { line = it } != null) {
+            if (lineNumber == index) {
+                val pokemon = parseCsvLine(line!!)
+                resultList.add(pokemon)
+                break
+            }
+            lineNumber++
+        }
+
+        reader.close()
+    }
+
+    return resultList
+}
+
+
+
+
+//fun readCsvLineByIndex(context: Context, resourceId: Int, indices: List<Int>): List<Pokemon> {
+//    val inputStream = context.resources.openRawResource(resourceId)
+//    val lines = inputStream.bufferedReader().readLines()
+//
+//    val resultList = mutableListOf<Pokemon>()
+//
+//    for (index in indices) {
+//        if (index < lines.size) {
+//            val lineArray = lines[index].split(",")
+//            val pokemon = parseCsvLine(lineArray.toTypedArray())
+//            resultList.add(pokemon)
+//        }
+//    }
+//
+//    return resultList
+//}
+
+
+fun parseCsvLine(line: Array<String>): Pokemon {
+    return Pokemon(
+        id = line[1],
+        name = line[0],
+        imageurl = line[2],
+        xdescription = line[3],
+        ydescription = line[4],
+        height = line[5],
+        category = line[6],
+        weight = line[7],
+        typeofpokemon = line[8].removeSurrounding("[", "]").split(", ").map { it.replace("'", "") },
+        weaknesses = line[9].removeSurrounding("[", "]").split(", ").map { it.replace("'", "") },
+        evolutions = line[10].removeSurrounding("[", "]").split(", ").map { it.replace("'", "") },
+        abilities = line[11].removeSurrounding("[", "]").split(", ").map { it.replace("'", "") },
+        genderless = line[12].toIntOrNull() ?: 0,
+        cycles = line[13],
+        egg_groups = line[14],
+        evolvedfrom = line[15],
+        reason = line[16],
+        base_exp = line[17],
+        classification = line[18],
+        percent_male = line[19],
+        percent_female = line[20],
+        abilities_hidden = line[21],
+        capture_rate = line[22],
+        base_egg_steps = line[23].toIntOrNull() ?: 0,
+        hp = line[24].toIntOrNull() ?: 0,
+        attack = line[25].toIntOrNull() ?: 0,
+        defense = line[26].toIntOrNull() ?: 0,
+        sp_attack = line[27].toIntOrNull() ?: 0,
+        sp_defense = line[28].toIntOrNull() ?: 0,
+        speed = line[29].toIntOrNull() ?: 0,
+        description = line[30],
+        status = line[31],
+        total_points = line[32].toIntOrNull() ?: 0,
+        base_friendship = line[33],
+        growth_rate = line[34],
+        effectiveness = line[35].removeSurrounding("[", "]").split(", ").map { it.toIntOrNull() ?: 0 }
+    )
+}
+
+

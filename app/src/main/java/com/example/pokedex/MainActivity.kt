@@ -1,6 +1,5 @@
 package com.example.pokedex
 
-import android.app.ActionBar
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,8 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.View
-import android.view.WindowManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -26,6 +23,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pokedex.adapter.PokemonAdapter
 import com.example.pokedex.databinding.ActivityMainBinding
 import com.example.pokedex.model.Pokemon
+import com.example.pokedex.model.PokemonSmall
+import com.example.pokedex.model.readCsvLineByIndex
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.viewmodel.MainViewModel
 import com.example.pokedex.viewmodel.MainViewModelFactory
@@ -97,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         pokemonAdapter.onItemClick = { pokemon, transitionName, sharedImageView ->
             val intent = Intent(this, PokemonActivity::class.java)
             val pokemonList = getPokemonEvolutionList(pokemon)
+            Log.d("CHECK", pokemonList.toString())
             val data = Json.encodeToString(pokemonList)
             intent.apply {
                 putExtra("TRANSITION_NAME", ViewCompat.getTransitionName(sharedImageView))
@@ -112,17 +112,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getPokemonEvolutionList(pokemon: Pokemon): List<Pokemon> {
-        val pokemonList = mutableListOf<Pokemon>()
-        pokemonList.add(pokemon)
+    private fun getPokemonEvolutionList(pokemon: PokemonSmall): List<Pokemon> {
+//        val pokemonList = mutableListOf<Pokemon>()
+//        pokemonList.add(pokemon)
+//        for(id in pokemon.evolutions){
+//            val idInt = getIdFromString(id)
+//            mainMvvm.observePokemonListLiveData().observe(this, Observer {
+//                pokemonList.add(it[idInt - 1])
+//            })
+//        }
+
+        // Read csv and get list
+        val specificLineIndices = getEvolutionIds(pokemon)
+
+        return readCsvLineByIndex(this, R.raw.pokemon_csv, specificLineIndices.toMutableList())
+    }
+
+    private fun getEvolutionIds(pokemon: PokemonSmall) : List<Int>{
+        val pokemonEvolutionIds = mutableListOf<Int>()
+        pokemonEvolutionIds.add(getIdFromString(pokemon.id))
         for(id in pokemon.evolutions){
             val idInt = getIdFromString(id)
-            mainMvvm.observePokemonListLiveData().observe(this, Observer {
-                pokemonList.add(it[idInt - 1])
-            })
+            pokemonEvolutionIds.add(idInt)
         }
-
-        return pokemonList
+        Log.d("CHECK", pokemonEvolutionIds.toString())
+        return pokemonEvolutionIds
     }
 
     private fun getIdFromString(id: String): Int {
@@ -142,10 +156,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
     private fun initializeRecyclerView() {
         mainMvvm.observePokemonListLiveData().observe(this, Observer {pokemonList ->
             pokemonAdapter.differ.submitList(pokemonList)
@@ -155,7 +165,7 @@ class MainActivity : AppCompatActivity() {
 
     // Loading Pokemon data from Json
     private fun initializeData() {
-        val inputStream = resources.openRawResource(R.raw.pokemon)
+        val inputStream = resources.openRawResource(R.raw.pokemon_small)
         mainMvvm.initializePokemon(inputStream)
     }
 

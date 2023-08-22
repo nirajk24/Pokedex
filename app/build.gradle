@@ -104,6 +104,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0" // Use the latest version
 
 
+    // For dealing with CSV File
+    implementation 'com.opencsv:opencsv:5.5.2'
 
 
 
