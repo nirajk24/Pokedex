@@ -1,28 +1,38 @@
 package com.example.pokedex.fragments
 
+import android.content.res.AssetManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
+import android.widget.ImageView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import com.example.pokedex.PokemonActivity
-import com.example.pokedex.R
 import com.example.pokedex.databinding.FragmentAboutBinding
 import com.example.pokedex.model.Pokemon
 import com.example.pokedex.utility.ColorUtils
 import com.example.pokedex.viewmodel.PokemonViewModel
+import java.io.IOException
+
 
 class AboutFragment : Fragment() {
 
     private lateinit var binding : FragmentAboutBinding
 
     private lateinit var pokemonMvvm: PokemonViewModel
+
+    private lateinit var bitmap : Bitmap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,34 +111,111 @@ class AboutFragment : Fragment() {
         val shinyFrontUrl = baseUrl + "shiny/" + pokemon.name.lowercase() + ".gif"
         val shinyBackUrl = baseUrl + "back-shiny/" + pokemon.name.lowercase() + ".gif"
 
-        Glide.with(binding.ivFrontSprite)
+//        val circularProgressDrawable = CircularProgressDrawable(requireActivity())
+//        circularProgressDrawable.strokeWidth = 5f
+//        circularProgressDrawable.centerRadius = 30f
+//        circularProgressDrawable.start()
+
+
+//        val assetManager: AssetManager? = context?.assets
+//
+//        try {
+//            val id = getIdFromString(pokemon.id)
+//            // Open the image file as an InputStream using the context's assetManager
+//            val inputStream = assetManager?.open("images/$id.png")
+//
+//            // Use BitmapFactory to decode the InputStream into a Bitmap
+//            bitmap = BitmapFactory.decodeStream(inputStream)
+//
+//            // Convert the InputStream to a Drawable
+//            val placeholderDrawable: Drawable? = inputStream?.let {
+//                Drawable.createFromStream(it, null)
+//            }
+////            loadImageUsingGlide(frontUrl, binding.ivFrontSprite, placeholderDrawable!!)
+////            loadImageUsingGlide(backUrl, binding.ivBackSprite, placeholderDrawable)
+////            loadImageUsingGlide(shinyFrontUrl, binding.ivShinyFrontSprite, placeholderDrawable!!)
+////            loadImageUsingGlide(shinyBackUrl, binding.ivShinyBackSprite, placeholderDrawable!!)
+//            Log.d("CHECK", "PLACEHOLDER : " + placeholderDrawable.toString())
+//            Log.d("CHECK", "BITMAP : $bitmap")
+//
+//
+//
+//
+//
+//        } catch (e: IOException) {
+//            // Handle exceptions
+//            e.printStackTrace()
+//        }
+
+
+
+        Glide.with(requireActivity())
             .asGif()
             .load(frontUrl)
             .transition(withCrossFade())
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-//            .error(R.drawable.pokeball)
+//            .placeholder(placeholderDrawable)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
             .into(binding.ivFrontSprite)
 
-        Glide.with(binding.root)
+        Glide.with(requireActivity())
+            .asGif()
             .load(backUrl)
             .transition(withCrossFade())
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-//            .error(R.drawable.pokeball)
+//            .placeholder(placeholderDrawable)
+            .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .into(binding.ivBackSprite)
 
-        Glide.with(binding.root)
+        Glide.with(requireActivity())
+            .asGif()
             .load(shinyFrontUrl)
             .transition(withCrossFade())
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
+//            .placeholder(placeholderDrawable)
+            .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .into(binding.ivShinyFrontSprite)
 
-        Glide.with(binding.root)
+        Glide.with(requireActivity())
+            .asGif()
             .load(shinyBackUrl)
             .transition(withCrossFade())
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
+//            .placeholder(placeholderDrawable)
+            .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .into(binding.ivShinyBackSprite)
 
 
+        // Set the Bitmap to your ImageView
+//        binding.ivFrontSprite.setImageBitmap(bitmap)
+//        binding.ivBackSprite.setImageBitmap(bitmap)
+//        binding.ivShinyFrontSprite.setImageBitmap(bitmap)
+//        binding.ivShinyBackSprite.setImageBitmap(bitmap)
+
+
+    }
+
+    fun loadImageUsingGlide(url : String, view : ImageView, placeHolder : Drawable){
+        Glide.with(requireActivity())
+            .asGif()
+            .load(url)
+            .transition(withCrossFade())
+            .placeholder(placeHolder)
+            .error(placeHolder)
+            .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .into(view)
+
+    }
+
+    private fun getIdFromString(id: String): Int {
+        var idInt = 0
+        val length = id.length
+        for(i in 1 until length){
+            idInt = (idInt * 10) + id[i].toString().toInt()
+        }
+
+        return idInt
     }
 
 }

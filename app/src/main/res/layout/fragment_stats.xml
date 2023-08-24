@@ -57,7 +57,7 @@
                         android:layout_marginEnd="4dp"
                         android:singleLine="true"
                         android:text="HP"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvHp"
@@ -67,7 +67,7 @@
                         android:layout_weight=".5"
                         android:singleLine="true"
                         android:text="Hp"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/pbHp"
@@ -95,7 +95,7 @@
                         android:layout_marginEnd="4dp"
                         android:singleLine="true"
                         android:text="Attack"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvAttack"
@@ -105,7 +105,7 @@
                         android:layout_weight=".5"
                         android:singleLine="true"
                         android:text="Hp"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/pbAttack"
@@ -133,7 +133,7 @@
                         android:layout_marginEnd="4dp"
                         android:singleLine="true"
                         android:text="Defense"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvDefense"
@@ -143,7 +143,7 @@
                         android:layout_weight=".5"
                         android:singleLine="true"
                         android:text="Hp"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/pbDefense"
@@ -171,7 +171,7 @@
                         android:layout_marginEnd="4dp"
                         android:singleLine="true"
                         android:text="Sp. Attack"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvSpAttack"
@@ -181,7 +181,7 @@
                         android:layout_weight=".5"
                         android:singleLine="true"
                         android:text="Hp"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/pbSpAttack"
@@ -209,7 +209,7 @@
                         android:layout_marginEnd="4dp"
                         android:singleLine="true"
                         android:text="Sp. Defense"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvSpDefense"
@@ -219,7 +219,7 @@
                         android:layout_weight=".5"
                         android:singleLine="true"
                         android:text="Hp"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/pbSpDefense"
@@ -246,7 +246,7 @@
                         android:layout_marginEnd="4dp"
                         android:singleLine="true"
                         android:text="Speed"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvSpeed"
@@ -256,7 +256,7 @@
                         android:layout_weight=".5"
                         android:singleLine="true"
                         android:text="Hp"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/pbSpeed"
@@ -284,7 +284,7 @@
                         android:layout_marginEnd="4dp"
                         android:singleLine="true"
                         android:text="Total"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvTotal"
@@ -294,7 +294,7 @@
                         android:layout_weight=".5"
                         android:singleLine="true"
                         android:text="Hp"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/pbTotal"

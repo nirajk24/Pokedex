@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.pokedex.PokemonActivity
 import com.example.pokedex.R
 import com.example.pokedex.databinding.FragmentEvolutionBinding
@@ -62,10 +64,12 @@ class EvolutionFragment : Fragment() {
 
                 Glide.with(requireActivity())
                     .load(pokemonEvolutionList[1].imageurl)
+                    .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
                     .into(ivPokemon1)
 
                 Glide.with(requireActivity())
                     .load(pokemonEvolutionList[2].imageurl)
+                    .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
                     .into(ivPokemon2)
             }
         }
@@ -90,10 +94,12 @@ class EvolutionFragment : Fragment() {
 
                 Glide.with(requireActivity())
                     .load(pokemonEvolutionList[2].imageurl)
+                    .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
                     .into(ivPokemon3)
 
                 Glide.with(requireActivity())
                     .load(pokemonEvolutionList[3].imageurl)
+                    .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
                     .into(ivPokemon4)
             }
         }

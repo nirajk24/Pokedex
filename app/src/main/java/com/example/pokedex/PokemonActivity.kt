@@ -1,6 +1,9 @@
 package com.example.pokedex
 
+import android.content.res.AssetManager
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.TransitionInflater
@@ -11,6 +14,8 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.pokedex.adapter.ViewPagerAdapter
 import com.example.pokedex.databinding.ActivityPokemonBinding
 import com.example.pokedex.model.Pokemon
@@ -24,6 +29,7 @@ import com.example.pokedex.viewmodel.PokemonViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.io.IOException
 
 class PokemonActivity : AppCompatActivity() {
 
@@ -53,7 +59,40 @@ class PokemonActivity : AppCompatActivity() {
 
 
 
+//        initializeShadowImage() // Takes too much RAM
 
+
+    }
+
+//    private fun initializeShadowImage() {
+//        val assetManager: AssetManager? = assets
+//
+//        try {
+//            val id = getIdFromString(pokemonList[0].id)
+//            // Open the image file as an InputStream using the context's assetManager
+//            val inputStream = assetManager?.open("images/$id.png")
+//
+//            // Use BitmapFactory to decode the InputStream into a Bitmap
+//            val bitmap = BitmapFactory.decodeStream(inputStream)
+//
+//            binding.ivPokemonImage2.setImageBitmap(bitmap)
+//
+//
+//        } catch (e: IOException) {
+//            // Handle exceptions
+//            e.printStackTrace()
+//        }
+//
+//    }
+
+    private fun getIdFromString(id: String): Int {
+        var idInt = 0
+        val length = id.length
+        for(i in 1 until length){
+            idInt = (idInt * 10) + id[i].toString().toInt()
+        }
+
+        return idInt
     }
 
     private fun initializeTopImage() {
@@ -107,6 +146,7 @@ class PokemonActivity : AppCompatActivity() {
         val extras = intent.extras
         val transitionName = extras?.getString("TRANSITION_NAME")
         val data = extras?.getString("POKEMON")
+        val source = extras?.getString("SOURCE")
         pokemonList = Json.decodeFromString<List<Pokemon>>(data!!)
         pokemonMvvm.setCurrentPokemonList(pokemonList)
         ViewCompat.setTransitionName(binding.ivPokemonImage, transitionName)
@@ -118,12 +158,16 @@ class PokemonActivity : AppCompatActivity() {
         }
 //        binding.targetImageView.transitionName = transitionName
 
-        val transition = TransitionInflater.from(this).inflateTransition(android.R.transition.move)
-        window.sharedElementReturnTransition = transition
+        if(source == "RV"){
+            // For Return transition
+            val transition = TransitionInflater.from(this).inflateTransition(android.R.transition.move)
+            window.sharedElementReturnTransition = transition
+        }
 
 
         Glide.with(binding.ivPokemonImage)
             .load(pokemonList[0].imageurl)
+            .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
             .into(binding.ivPokemonImage)
     }
 

@@ -1,8 +1,10 @@
 package com.example.pokedex.adapter
 
-import android.content.Intent
+import android.content.res.AssetManager
+import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.opengl.Visibility
+import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,19 +13,16 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.pokedex.MainActivity
-import com.example.pokedex.PokemonActivity
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.pokedex.databinding.PokemonCard2Binding
 import com.example.pokedex.databinding.PokemonCardBinding
-import com.example.pokedex.model.Pokemon
 import com.example.pokedex.model.PokemonSmall
 import com.example.pokedex.utility.ColorUtils
-import com.example.pokedex.utility.Constants
 import com.example.pokedex.utility.TypeUtils
-import com.example.pokedex.viewmodel.MainViewModel
-import kotlinx.serialization.Serializable
+import java.io.IOException
 
-class PokemonAdapter() : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
+class PokemonAdapter(private val assetManager: AssetManager) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
 
 
     lateinit var onItemClick : ((PokemonSmall, String, View) -> Unit)
@@ -66,6 +65,7 @@ class PokemonAdapter() : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>(
 
         Glide.with(holder.itemView)
             .load(pokemon.imageurl)
+            .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
             .into(holder.binding.ivPokemonThumb)
 
         holder.binding.apply {
@@ -95,7 +95,6 @@ class PokemonAdapter() : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>(
                 cvPokemonType2.background.setTint(Color.parseColor("#88$color2"))
 
                 val pokemonType2Icon = TypeUtils.typeMap[pokemonType2]
-//                ivPokemonType2.setImageResource(pokemonType2Icon!!)
                 Glide.with(holder.itemView)
                     .load(pokemonType2Icon)
                     .into(ivPokemonType2)

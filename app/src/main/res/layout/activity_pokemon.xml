@@ -73,6 +73,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+<!--    <ImageView-->
+<!--        android:id="@+id/ivPokemonImage2"-->
+<!--        android:layout_width="170dp"-->
+<!--        android:layout_height="170dp"-->
+<!--        android:layout_marginTop="96dp"-->
+<!--        android:layout_marginStart="22dp"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
 
     <ImageView
         android:id="@+id/ivPokemonImage"
@@ -84,6 +94,7 @@
         android:transitionName="transition_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <com.example.pokedex.utility.FadingImageView
         android:layout_width="100dp"

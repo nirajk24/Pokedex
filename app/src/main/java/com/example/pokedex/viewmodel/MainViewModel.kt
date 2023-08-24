@@ -5,7 +5,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.R
@@ -16,6 +18,7 @@ import com.example.pokedex.model.readCsvLineByIndex
 import com.example.pokedex.pojo.PokemonName
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.retrofit.RetrofitInstance
+import com.example.pokedex.utility.NameToId
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import retrofit2.Call
@@ -30,14 +33,16 @@ class MainViewModel(
 ) : AndroidViewModel(application) {
 
 
+    lateinit var onApiResult : ((PokemonSmall) -> Unit)
+
     private var pokemonList = MutableLiveData<List<PokemonSmall>>()
     fun observePokemonListLiveData() = pokemonList
 
-    private lateinit var currentPokemon : PokemonSmall
-    fun getCurrentPokemon() = currentPokemon
-    fun setCurrentPokemon(pokemon: PokemonSmall){
-        currentPokemon = pokemon
-    }
+//    private lateinit var currentPokemon : MutableLiveData<PokemonSmall>
+//    fun observeCurrentPokemon() = currentPokemon
+//    fun setCurrentPokemon(pokemon: PokemonSmall){
+//        currentPokemon.value = pokemon
+//    }
 
 
     fun initializePokemon(inputStream : InputStream){
@@ -58,6 +63,10 @@ class MainViewModel(
                     val pokemonName: PokemonName = response.body()!!
 
                     val text = pokemonName.class_name.toString() + "\n" + pokemonName.prob
+                    val id = NameToId.nameToIdMap[pokemonName.class_name]
+//                    setCurrentPokemon(getPokemonById(id!!))
+                    onApiResult(getPokemonById(id!!))
+
 //                    binding.tvBase64.text = text
                 }
             }
@@ -67,6 +76,11 @@ class MainViewModel(
                 Log.d("TEST", t.message.toString())
             }
         })
+    }
+
+    fun getPokemonById(pokemonId : String) : PokemonSmall{
+        val pokemon = observePokemonListLiveData().value?.get(getIdFromString(pokemonId) - 1)
+        return pokemon!!
     }
 
     fun getPokemonEvolutionList(pokemon: PokemonSmall): List<Pokemon> {

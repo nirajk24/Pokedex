@@ -3,16 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginBottom="12dp"
+    android:layout_marginEnd="4dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tvPokemonName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:singleLine="true"
+        android:layout_marginEnd="24dp"
+        android:text="Bulbasaur"
+        android:elevation="20dp"
+        android:textAlignment="viewStart"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvMainCard"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:cardCornerRadius="10dp"
-        app:layout_constraintDimensionRatio="1:0.75"
+        app:layout_constraintDimensionRatio="1:0.68"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,48 +50,49 @@
                 android:layout_weight="1.1"
                 android:orientation="vertical">
 
-
-                <TextView
-                    android:id="@+id/tvPokemonName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:singleLine="true"
-                    android:text="Bulbasaur"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cvPokemonType1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:cardBackgroundColor="#8AFFFFFF"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="12dp"
                     app:cardCornerRadius="8dp"
                     app:cardElevation="0dp"
                     android:minWidth="55dp"
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/cvPokemonType2"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvPokemonName"
                     app:layout_constraintVertical_chainStyle="packed">
 
 
-                    <TextView
-                        android:id="@+id/tvPokemonType1"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="6dp"
-                        android:layout_gravity="start"
-                        android:textSize="13sp"
-                        android:layout_marginBottom="2dp"
-                        android:text="Fire" />
+                        android:layout_height="match_parent"
+                        android:background="#26000000"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/ivPokemonType1"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="4dp"
+                            android:src="@drawable/grass"
+                            android:layout_gravity="center_vertical"/>
+
+                        <TextView
+                            android:id="@+id/tvPokemonType1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#D0FFFFFF"
+                            android:text="Fire"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_gravity="center_vertical"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
@@ -81,23 +101,30 @@
                     android:layout_height="wrap_content"
                     app:cardBackgroundColor="#8AFFFFFF"
                     app:cardCornerRadius="8dp"
-                    android:visibility="gone"
                     app:cardElevation="0dp"
                     android:minWidth="55dp"
+                    android:visibility="invisible"
+                    android:layout_marginBottom="18dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/cvPokemonType1"
-                    app:layout_constraintTop_toBottomOf="@+id/cvPokemonType1"
                     app:layout_constraintVertical_bias="0.5">
+
+                    <ImageView
+                        android:id="@+id/ivPokemonType2"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_gravity="center_vertical" />
 
                     <TextView
                         android:id="@+id/tvPokemonType2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:textSize="13sp"
-                        android:layout_marginHorizontal="6dp"
-                        android:layout_marginBottom="2dp"
-                        android:text="Dragon" />
+                        android:layout_marginStart="28dp"
+                        android:textColor="#D0FFFFFF"
+                        android:layout_marginEnd="6dp"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="13sp" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -118,6 +145,7 @@
                     android:textColor="#68FFFFFF"
                     android:layout_weight="0.4"
                     android:textSize="16dp"
+                    android:padding="4dp"
                     android:layout_marginEnd="4dp"
                     android:textAlignment="viewEnd"
                     android:textStyle="bold"/>
@@ -153,6 +181,5 @@
 
 
     </androidx.cardview.widget.CardView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

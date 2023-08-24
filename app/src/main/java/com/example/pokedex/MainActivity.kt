@@ -1,15 +1,14 @@
 package com.example.pokedex
 
-import android.animation.ArgbEvaluator
-import android.animation.ValueAnimator
 import android.app.Activity
+import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.Rect
-import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -17,32 +16,36 @@ import android.provider.MediaStore
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
+import android.transition.Fade
 import android.util.Log
-import android.view.KeyEvent
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
+import android.widget.Button
 import android.widget.ImageView
-import android.widget.SearchView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.pokedex.adapter.PokemonAdapter
+import com.example.pokedex.adapter.PokemonGridAdapter
 import com.example.pokedex.databinding.ActivityMainBinding
-import com.example.pokedex.model.Pokemon
-import com.example.pokedex.model.PokemonSmall
-import com.example.pokedex.model.readCsvLineByIndex
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.viewmodel.MainViewModel
 import com.example.pokedex.viewmodel.MainViewModelFactory
@@ -61,10 +64,15 @@ class MainActivity : AppCompatActivity() {
 
     private var selectedImageBitmap: Bitmap? = null
 
-    // Adapter
-    private lateinit var pokemonAdapter : PokemonAdapter
+    private lateinit var dialog: Dialog
 
-    private val mainMvvm : MainViewModel by lazy{
+    private var isLinearLayout = false
+    // Adapter
+    private lateinit var pokemonAdapter: PokemonAdapter
+
+    private lateinit var pokemonGridAdapter: PokemonGridAdapter
+
+    private val mainMvvm: MainViewModel by lazy {
         val repository = Repository()
         val mainViewModelFactory = MainViewModelFactory(repository, application)
         ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
@@ -89,6 +97,18 @@ class MainActivity : AppCompatActivity() {
 //        fab.layoutParams = layoutParams
 
 //
+
+
+        prepareRecyclerView()
+        initializeRecyclerView()
+
+        dialog = Dialog(this, R.style.FullScreenDialogStyle)
+        dialog.setContentView(R.layout.fullscreen_dialog)
+        dialog.findViewById<Button>(R.id.btnBack).setOnClickListener {
+            dialog.hide()
+        }
+
+
         binding.btnCamera.setOnClickListener {
             requestCameraPermission()
             hideFabButtons()
@@ -103,38 +123,85 @@ class MainActivity : AppCompatActivity() {
 
         intentToProfile()
 
-        prepareRecyclerView()
-        initializeRecyclerView()
+
 
 
         onPokemonItemClick()
 
         implementSearchView()
 
-
-
         setUpButton()
 
         setFabButton()
 
+//        observeCurrentPokemon()
+
+        mainMvvm.onApiResult = { pokemonSmall ->
+            Glide.with(this)
+                .load(pokemonSmall.imageurl)
+                .into(dialog.findViewById(R.id.imgCurrentPokemon))
+
+            dialog.apply {
+                findViewById<Button>(R.id.btnCollect).visibility = View.VISIBLE
+            }
+
+            ViewCompat.setTransitionName(
+                dialog.findViewById(R.id.imgCurrentPokemon),
+                pokemonSmall.name
+            );
+
+            dialog.findViewById<Button>(R.id.btnCollect).setOnClickListener {
+
+                val intent = Intent(this, PokemonActivity::class.java)
+                val pokemonList = mainMvvm.getPokemonEvolutionList(pokemonSmall)
+                val sharedImageView = dialog.findViewById<ImageView>(R.id.imgCurrentPokemon)
+
+                val data = Json.encodeToString(pokemonList)
+                intent.apply {
+                    putExtra("TRANSITION_NAME", ViewCompat.getTransitionName(sharedImageView))
+                    putExtra("POKEMON", data)
+                    putExtra("SOURCE", "DIALOG")
+                }
+
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this,
+                    sharedImageView,
+                    ViewCompat.getTransitionName(sharedImageView)!!
+                )
+                startActivity(intent, options.toBundle())
+                dialog.hide()
+            }
+        }
+
 
     }
+
 
     private fun setFabButton() {
         binding.apply {
             fabPokeball.setOnClickListener {
-                if(btnCamera.isVisible or btnStorage.isVisible){
+                if (btnCamera.isVisible or btnStorage.isVisible) {
                     hideFabButtons()
                 } else {
-                   showFabButtons()
+                    showFabButtons()
                 }
             }
         }
     }
 
     private fun showFabButtons() {
+
+        val animateCamera = TranslateAnimation(100f, 0f, 150f, 0f)
+        animateCamera.duration = 100;
+
+        val animateStorage = TranslateAnimation(100f, 0f, 100f, 0f)
+        animateStorage.duration = 150;
+
         binding.apply {
+            btnCamera.startAnimation(animateCamera);
             btnCamera.visibility = View.VISIBLE
+
+            btnStorage.startAnimation(animateStorage);
             btnStorage.visibility = View.VISIBLE
             fabPokeball.setImageResource(R.drawable.ic_close)
         }
@@ -170,7 +237,8 @@ class MainActivity : AppCompatActivity() {
             }.start()
         }
 
-        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object :
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // Handle query submission
                 searchView.clearFocus()
@@ -181,7 +249,11 @@ class MainActivity : AppCompatActivity() {
                 // Animate the search plate based on query text
                 val filteredPokemons = mainMvvm.filterPokemons(newText.orEmpty())
 
-                pokemonAdapter.differ.submitList(filteredPokemons)
+                if (isLinearLayout) {
+                    pokemonAdapter.differ.submitList(filteredPokemons)
+                } else {
+                    pokemonGridAdapter.differ.submitList(filteredPokemons)
+                }
                 return true
             }
         })
@@ -191,20 +263,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpHint() {
 
-        val hints = listOf("Search Charmander", "Search Fire", "Search #004",
+        val hints = listOf(
+            "Search Charmander", "Search Fire", "Search #004",
             "Search Chikorita", "Search Grass", "Search #152",
-            "Search Palkia", "Search Water", "Search #484") // List of hints to cycle through
+            "Search Gastly", "Search Ghost", "Search #091"
+        ) // List of hints to cycle through
         var currentHintIndex = 0
 
         val handler = Handler()
         val color1 = Color.parseColor("#CCEE8130") // Fire Color
-        val color2 =  Color.parseColor("#CC7AC74C") // Grass color
-        val color3 =  Color.parseColor("#CC6390F0") // Water color
+        val color2 = Color.parseColor("#CC7AC74C") // Grass color
+        val color3 = Color.parseColor("#DDA98FF3") // Water color
 
         val initialColor = Color.parseColor("#CCEE8130") // Initial color
 
         binding.searchView.queryHint = SpannableString(hints[currentHintIndex]).apply {
-            setSpan(ForegroundColorSpan(initialColor), 6, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(
+                ForegroundColorSpan(initialColor),
+                6,
+                length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
 
         handler.post(object : Runnable {
@@ -214,11 +293,16 @@ class MainActivity : AppCompatActivity() {
                 val currentColor = when (currentHintIndex) {
                     0, 1, 2 -> color1
                     3, 4, 5 -> color2
-                    else -> color1
+                    else -> color3
                 }
 
                 binding.searchView.queryHint = SpannableString(hints[currentHintIndex]).apply {
-                    setSpan(ForegroundColorSpan(currentColor), 6, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    setSpan(
+                        ForegroundColorSpan(currentColor),
+                        6,
+                        length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
 //                  coloredHint.setSpan(StyleSpan(Typeface.BOLD), 6, hint.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                 }
@@ -237,20 +321,39 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setUpButton() {
-        val layoutManager = LinearLayoutManager(this)
-        binding.rvPokemon.layoutManager = layoutManager
 
-        binding.rvPokemon.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
+        if (isLinearLayout) {
+            val layoutManager = LinearLayoutManager(this)
+            binding.rvPokemon.layoutManager = layoutManager
 
-                // Get the first visible item position
-                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+            binding.rvPokemon.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
 
-                // Toggle the visibility of the button based on the scroll position
-                binding.btnGoToTop.visibility = if (firstVisibleItemPosition > 0) View.VISIBLE else View.GONE
-            }
-        })
+                    // Get the first visible item position
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                    // Toggle the visibility of the button based on the scroll position
+                    binding.btnGoToTop.visibility = if (firstVisibleItemPosition > 0) View.VISIBLE else View.GONE
+                }
+            })
+
+        } else {
+            val layoutManager = GridLayoutManager(this, 2)
+            binding.rvPokemon.layoutManager = layoutManager
+
+            binding.rvPokemon.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    // Get the first visible item position
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                    // Toggle the visibility of the button based on the scroll position
+                    binding.btnGoToTop.visibility = if (firstVisibleItemPosition > 0) View.VISIBLE else View.GONE
+                }
+            })
+        }
 
         binding.btnGoToTop.setOnClickListener {
             binding.rvPokemon.smoothScrollToPosition(0)
@@ -263,14 +366,18 @@ class MainActivity : AppCompatActivity() {
             binding.btnGoToTop.visibility = View.GONE
             true
         }
+    }
 
-
+    private fun showFullscreenDialog() {
+        // Customize the dialog content here
+        dialog.show()
     }
 
     // Loading Pokemon data from Json
     private fun initializeData() {
         val inputStream = resources.openRawResource(R.raw.pokemon_small)
         mainMvvm.initializePokemon(inputStream)
+        inputStream.close()
     }
 
     // Profile section
@@ -283,20 +390,53 @@ class MainActivity : AppCompatActivity() {
 
     // Preparing Pokemon Recycler View
     private fun prepareRecyclerView() {
-        pokemonAdapter = PokemonAdapter()
+        val assetManager: AssetManager? = assets
+
+        pokemonAdapter = PokemonAdapter(assetManager!!)
+        pokemonGridAdapter = PokemonGridAdapter()
+
         binding.rvPokemon.apply {
-//            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = pokemonAdapter
+            if (isLinearLayout) {
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                adapter = pokemonAdapter
+
+            } else {
+                setMargins(6, 8, 10, 8)
+                layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+                adapter = pokemonGridAdapter
+            }
             setHasFixedSize(true)
-            setItemViewCacheSize(40)
+            setItemViewCacheSize(20)
         }
+    }
+
+    fun View.setMargins(
+        leftMarginDp: Int? = null,
+        topMarginDp: Int? = null,
+        rightMarginDp: Int? = null,
+        bottomMarginDp: Int? = null
+    ) {
+        if (layoutParams is ViewGroup.MarginLayoutParams) {
+            val params = layoutParams as ViewGroup.MarginLayoutParams
+            leftMarginDp?.run { params.leftMargin = this.dpToPx(context) }
+            topMarginDp?.run { params.topMargin = this.dpToPx(context) }
+            rightMarginDp?.run { params.rightMargin = this.dpToPx(context) }
+            bottomMarginDp?.run { params.bottomMargin = this.dpToPx(context) }
+            requestLayout()
+        }
+    }
+
+    fun Int.dpToPx(context: Context): Int {
+        val metrics = context.resources.displayMetrics
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), metrics).toInt()
     }
 
     // Observing data and submitting the list
     private fun initializeRecyclerView() {
         mainMvvm.observePokemonListLiveData().observe(this, Observer {pokemonList ->
-            pokemonAdapter.differ.submitList(pokemonList)
+            if(isLinearLayout) pokemonAdapter.differ.submitList(pokemonList)
+            else pokemonGridAdapter.differ.submitList(pokemonList)
+
         })
     }
 
@@ -307,11 +447,31 @@ class MainActivity : AppCompatActivity() {
         pokemonAdapter.onItemClick = { pokemon, transitionName, sharedImageView ->
             val intent = Intent(this, PokemonActivity::class.java)
             val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
-            Log.d("CHECK", pokemonList.toString())
+
             val data = Json.encodeToString(pokemonList)
             intent.apply {
                 putExtra("TRANSITION_NAME", ViewCompat.getTransitionName(sharedImageView))
                 putExtra("POKEMON", data)
+                putExtra("SOURCE", "RV")
+            }
+
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                sharedImageView,
+                ViewCompat.getTransitionName(sharedImageView)!!
+            )
+            startActivity(intent, options.toBundle())
+        }
+
+        pokemonGridAdapter.onItemClick = { pokemon, transitionName, sharedImageView ->
+            val intent = Intent(this, PokemonActivity::class.java)
+            val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
+
+            val data = Json.encodeToString(pokemonList)
+            intent.apply {
+                putExtra("TRANSITION_NAME", ViewCompat.getTransitionName(sharedImageView))
+                putExtra("POKEMON", data)
+                putExtra("SOURCE", "RV")
             }
 
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -339,7 +499,9 @@ class MainActivity : AppCompatActivity() {
                 val base64 = mainMvvm.convertToByte64(selectedImageBitmap!!)
                 mainMvvm.getPokemonNameByImage(base64)  // Sets the Current Pokemon
 
-                TODO("Dialog Page Appears")
+                showFullscreenDialog()
+
+//                TODO("Dialog Page Appears")
             }
         }
 
@@ -361,7 +523,8 @@ class MainActivity : AppCompatActivity() {
                         val base64 = mainMvvm.convertToByte64(selectedImageBitmap!!)
                         mainMvvm.getPokemonNameByImage(base64) // Sets the Current Pokemon
 
-                        TODO("Dialog Page Appears")
+                        showFullscreenDialog()
+//                        TODO("Dialog Page Appears")
                     }
                 } catch (e: IOException) {
                     e.printStackTrace()

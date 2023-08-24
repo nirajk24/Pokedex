@@ -69,12 +69,16 @@ class EffectivenessAdapter() : RecyclerView.Adapter<EffectivenessAdapter.Effecti
             if(effect != 100){
                 tvEffectiveness.text = numberMapping[effect]
 
-                if(effect > 100)
+                if(effect == 200)
                     ivCircle.setImageResource(R.color.good)
                 else if(effect == 0)
                     ivCircle.setImageResource(R.color.neutral)
-                else
+                else if(effect == 50)
                     ivCircle.setImageResource(R.color.bad)
+                else if(effect == 25)
+                    ivCircle.setImageResource(R.color.very_bad)
+                else if(effect == 400)
+                    ivCircle.setImageResource(R.color.very_good)
             }
         }
     }

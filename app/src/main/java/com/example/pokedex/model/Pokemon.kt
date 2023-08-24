@@ -83,6 +83,7 @@ fun readCsvLineByIndex(context: Context, resourceId: Int, indices: List<Int>): L
         }
 
         reader.close()
+        inputStream.close()
     }
 
     return resultList

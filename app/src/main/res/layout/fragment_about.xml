@@ -258,7 +258,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         style="@style/text_content"
-                        android:textSize="16dp"
+                        android:textSize="15dp"
                         android:layout_weight="1"
                         android:text="Gender"/>
 
@@ -275,7 +275,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             style="@style/text_sub_head"
-                            android:textSize="16dp"
+                            android:textSize="15dp"
                             android:drawableStart="@drawable/ic_male"
                             android:text="Male"/>
 
@@ -286,7 +286,7 @@
                             style="@style/text_sub_head"
                             android:layout_marginStart="16dp"
                             android:drawableStart="@drawable/ic_female"
-                            android:textSize="16dp"
+                            android:textSize="15dp"
                             android:text="Female"/>
 
                     </LinearLayout>
@@ -302,7 +302,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         style="@style/text_content"
-                        android:textSize="16dp"
+                        android:textSize="15dp"
                         android:layout_weight="1"
                         android:text="Egg Groups"/>
 
@@ -312,7 +312,7 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         style="@style/text_sub_head"
-                        android:textSize="16dp"
+                        android:textSize="15dp"
                         android:layout_weight="2.2"
                         android:text="Egg Cycle"/>
 
@@ -330,7 +330,7 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         style="@style/text_content"
-                        android:textSize="16dp"
+                        android:textSize="15dp"
                         android:layout_weight="1"
                         android:text="Egg Cycle"/>
 
@@ -340,7 +340,7 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         style="@style/text_sub_head"
-                        android:textSize="16dp"
+                        android:textSize="15dp"
                         android:layout_weight="2.2"
                         android:text="Egg Cycle"/>
 
@@ -359,7 +359,7 @@
                         android:layout_weight="1"
                         android:singleLine="true"
                         android:text="Classification"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvClassification"
@@ -369,7 +369,7 @@
                         android:layout_weight="2.2"
                         android:singleLine="true"
                         android:text="Classification"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -408,7 +408,7 @@
                         android:layout_weight="1"
                         android:singleLine="true"
                         android:text="Abilities"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvAbilities"
@@ -417,7 +417,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2.2"
                         android:text="Abilities"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                 </LinearLayout>
 
@@ -435,7 +435,7 @@
                         android:layout_weight="1"
                         android:singleLine="true"
                         android:text="Catch Rate"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvCatchRate"
@@ -445,7 +445,7 @@
                         android:layout_weight="2.2"
                         android:singleLine="true"
                         android:text="Catch Rate"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
 
                 </LinearLayout>
@@ -462,7 +462,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Base \nFriendship"
-                    android:textSize="16dp" />
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/tvBaseFriendship"
@@ -472,7 +472,7 @@
                     android:layout_weight="2.2"
                     android:singleLine="true"
                     android:text="Base Friendship"
-                    android:textSize="16dp" />
+                    android:textSize="15dp" />
 
 
             </LinearLayout>
@@ -490,7 +490,7 @@
                         android:layout_weight="1"
                         android:singleLine="true"
                         android:text="Base Exp."
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvBaseExp"
@@ -500,7 +500,7 @@
                         android:layout_weight="2.2"
                         android:singleLine="true"
                         android:text="Base Exp."
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
 
                 </LinearLayout>
@@ -518,7 +518,7 @@
                     android:layout_weight="1"
                     android:singleLine="true"
                     android:text="Growth Rate"
-                    android:textSize="16dp" />
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/tvGrowthRate"
@@ -528,7 +528,7 @@
                     android:layout_weight="2.2"
                     android:singleLine="true"
                     android:text="Growth Rate"
-                    android:textSize="16dp" />
+                    android:textSize="15dp" />
 
 
             </LinearLayout>
@@ -548,7 +548,7 @@
                         android:layout_weight="1"
                         android:singleLine="true"
                         android:text="Weight"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvWeight"
@@ -558,7 +558,7 @@
                         android:layout_weight="2.2"
                         android:singleLine="true"
                         android:text="Weight"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
 
                 </LinearLayout>
@@ -576,7 +576,7 @@
                         android:layout_weight="1"
                         android:singleLine="true"
                         android:text="Height"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvHeight"
@@ -586,7 +586,7 @@
                         android:layout_weight="2.2"
                         android:singleLine="true"
                         android:text="Height"
-                        android:textSize="16dp" />
+                        android:textSize="15dp" />
 
 
                 </LinearLayout>

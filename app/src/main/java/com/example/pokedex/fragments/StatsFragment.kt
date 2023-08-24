@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.TranslateAnimation
 import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -88,6 +90,9 @@ class StatsFragment : Fragment() {
     }
 
     private fun setBaseStats() {
+
+        val animate = AnimationUtils.loadAnimation(requireActivity(), R.anim.fill_animation)
+
         binding.apply {
             tvHead1.setTextColor(Color.parseColor("#$mainColor"))
 
@@ -115,6 +120,14 @@ class StatsFragment : Fragment() {
             }
             tvTotal.text = total.toString()
             setProgressBar(pbTotal, total, 900)
+
+            pbAttack.startAnimation(animate)
+            pbHp.startAnimation(animate)
+            pbDefense.startAnimation(animate)
+            pbSpAttack.startAnimation(animate)
+            pbSpDefense.startAnimation(animate)
+            pbSpeed.startAnimation(animate)
+            pbTotal.startAnimation(animate)
         }
     }
 

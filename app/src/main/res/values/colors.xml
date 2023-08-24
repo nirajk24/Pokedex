@@ -42,8 +42,10 @@
     <color name="transparent">#00FFFFFF</color>
 
     <color name="bad">#E65D5D</color>
-    <color name="good">#F546D54E</color>
-    <color name="neutral">#F5D6B140</color>
+    <color name="very_bad">#CC3A3A</color>
+    <color name="good">#F557E35F</color>
+    <color name="very_good">#F528C631</color>
+    <color name="neutral">#F5787878</color>
 
 
     <color name="grey">#F5888888</color>
