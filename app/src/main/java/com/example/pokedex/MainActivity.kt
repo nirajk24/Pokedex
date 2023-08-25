@@ -12,21 +12,22 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.transition.Fade
 import android.util.Log
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
+import android.view.Window
+import android.view.WindowManager
 import android.view.animation.TranslateAnimation
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.RelativeLayout
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -36,6 +37,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -43,6 +45,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.example.pokedex.adapter.PokemonAdapter
 import com.example.pokedex.adapter.PokemonGridAdapter
 import com.example.pokedex.databinding.ActivityMainBinding
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var dialog: Dialog
 
-    private var isLinearLayout = false
+    private var isLinearLayout = true
     // Adapter
     private lateinit var pokemonAdapter: PokemonAdapter
 
@@ -84,29 +87,28 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        WindowCompat.setDecorFitsSystemWindows(window, false)
+//        window.setDecorFitsSystemWindows(false)
 
-//        val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-//        val navigationBarHeight = getNavigationBarHeight(this)
-//        val availableScreenHeight = screenHeight - navigationBarHeight
-//
-//        val fab: FloatingActionButton = findViewById(R.id.fabPokeball) // Replace with your FAB reference
-//
-//        val layoutParams = fab.layoutParams as RelativeLayout.LayoutParams
-//        layoutParams.bottomMargin = availableScreenHeight / 4 // Adjust this value as needed
-//        fab.layoutParams = layoutParams
 
-//
+        dialog = Dialog(this, R.style.FullScreenDialogStyle)
+//        showFullscreenDialog()
 
+//        binding.shimmerLayoutHome.startShimmer()
+//
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            //Do something after 100ms
+//            // Hide shimmer effect
+//            binding.shimmerLayoutHome.stopShimmer()
+//            binding.shimmerLayoutHome.visibility = View.GONE
+//            binding.shimmerCardView.visibility = View.GONE
+//            // Make the view visible again
+//        }, 2000)
+
+        binding.shimmerLayoutHome.visibility = View.GONE
+        binding.shimmerCardView.visibility = View.GONE
 
         prepareRecyclerView()
         initializeRecyclerView()
-
-        dialog = Dialog(this, R.style.FullScreenDialogStyle)
-        dialog.setContentView(R.layout.fullscreen_dialog)
-        dialog.findViewById<Button>(R.id.btnBack).setOnClickListener {
-            dialog.hide()
-        }
 
 
         binding.btnCamera.setOnClickListener {
@@ -136,44 +138,66 @@ class MainActivity : AppCompatActivity() {
 
 //        observeCurrentPokemon()
 
-        mainMvvm.onApiResult = { pokemonSmall ->
-            Glide.with(this)
-                .load(pokemonSmall.imageurl)
-                .into(dialog.findViewById(R.id.imgCurrentPokemon))
+        setUpDialogBox()
 
-            dialog.apply {
-                findViewById<Button>(R.id.btnCollect).visibility = View.VISIBLE
-            }
 
-            ViewCompat.setTransitionName(
-                dialog.findViewById(R.id.imgCurrentPokemon),
-                pokemonSmall.name
-            );
+    }
 
-            dialog.findViewById<Button>(R.id.btnCollect).setOnClickListener {
+    private fun setUpDialogBox() {
 
-                val intent = Intent(this, PokemonActivity::class.java)
-                val pokemonList = mainMvvm.getPokemonEvolutionList(pokemonSmall)
-                val sharedImageView = dialog.findViewById<ImageView>(R.id.imgCurrentPokemon)
+        mainMvvm.onApiResult = { pokemonSmall, prob ->
 
-                val data = Json.encodeToString(pokemonList)
-                intent.apply {
-                    putExtra("TRANSITION_NAME", ViewCompat.getTransitionName(sharedImageView))
-                    putExtra("POKEMON", data)
-                    putExtra("SOURCE", "DIALOG")
+            // Pokemon Caught Confirm
+            if(prob > 0.5) {
+                Glide.with(this)
+                    .load(pokemonSmall.imageurl)
+                    .into(dialog.findViewById(R.id.ivPokemonImage))
+
+                dialog.apply {
+                    findViewById<ConstraintLayout>(R.id.pokemonCaught).visibility = View.VISIBLE
                 }
 
-                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this,
-                    sharedImageView,
-                    ViewCompat.getTransitionName(sharedImageView)!!
-                )
-                startActivity(intent, options.toBundle())
-                dialog.hide()
+//            ViewCompat.setTransitionName(
+//                dialog.findViewById(R.id.imgCurrentPokemon),
+//                pokemonSmall.name
+//            );
+
+//            ViewCompat.setTransitionName(holder.binding.ivPokemonThumb, pokemon.name);
+
+
+                // Go to Pokemon Activity
+                dialog.findViewById<Button>(R.id.btnCollect).setOnClickListener {
+//                dialog.setContentView(0)
+
+
+                    val intent = Intent(this, PokemonActivity::class.java)
+                    val pokemonList = mainMvvm.getPokemonEvolutionList(pokemonSmall)
+                    val sharedImageView = dialog.findViewById<ImageView>(R.id.ivPokemonImage)
+
+                    val data = Json.encodeToString(pokemonList)
+                    intent.apply {
+                        putExtra("TRANSITION_NAME", pokemonSmall.name)
+                        putExtra("POKEMON", data)
+                        putExtra("SOURCE", "DIALOG")
+                    }
+
+//                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                        this,
+//                        sharedImageView,
+//                        pokemonSmall.name
+//                    )
+
+//                    startActivity(intent, options.toBundle())
+                    startActivity(intent)
+
+                }
+            } else {
+                Glide.with(this)
+                    .load(R.drawable.no_pokemon)
+                    .downsample(DownsampleStrategy.AT_MOST)
+                    .into(dialog.findViewById(R.id.ivPokemonImage))
             }
         }
-
-
     }
 
 
@@ -195,7 +219,7 @@ class MainActivity : AppCompatActivity() {
         animateCamera.duration = 100;
 
         val animateStorage = TranslateAnimation(100f, 0f, 100f, 0f)
-        animateStorage.duration = 150;
+        animateStorage.duration = 150
 
         binding.apply {
             btnCamera.startAnimation(animateCamera);
@@ -253,6 +277,12 @@ class MainActivity : AppCompatActivity() {
                     pokemonAdapter.differ.submitList(filteredPokemons)
                 } else {
                     pokemonGridAdapter.differ.submitList(filteredPokemons)
+                }
+                if (newText.isNullOrEmpty() ) {
+                    mainMvvm.observePokemonListLiveData().observe(this@MainActivity, Observer {pokemonList ->
+                        if(isLinearLayout) pokemonAdapter.differ.submitList(pokemonList)
+                        else pokemonGridAdapter.differ.submitList(pokemonList)
+                    })
                 }
                 return true
             }
@@ -370,7 +400,31 @@ class MainActivity : AppCompatActivity() {
 
     private fun showFullscreenDialog() {
         // Customize the dialog content here
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.Flying));
+//        }
+
+        dialog.setContentView(R.layout.fullscreen_dialog)
+        dialog.findViewById<Button>(R.id.btnHome).setOnClickListener {
+            hideFullScreenDialog()
+        }
+        dialog.findViewById<ImageView>(R.id.ivBack).setOnClickListener {
+            hideFullScreenDialog()
+        }
+        Log.d("CHECK", window.decorView.toString())
+
+
+//        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         dialog.show()
+    }
+
+    private fun hideFullScreenDialog(){
+        if(dialog.isShowing){
+            dialog.hide()
+        }
+        WindowCompat.setDecorFitsSystemWindows(window, true)
     }
 
     // Loading Pokemon data from Json
@@ -497,14 +551,31 @@ class MainActivity : AppCompatActivity() {
 
                 // Handle the captured image
                 val base64 = mainMvvm.convertToByte64(selectedImageBitmap!!)
-                mainMvvm.getPokemonNameByImage(base64)  // Sets the Current Pokemon
+//                mainMvvm.getPokemonNameByImage(base64)  // Sets the Current Pokemon
 
-                showFullscreenDialog()
+
+
+//                dialog = Dialog(this, R.style.FullScreenDialogStyle)
+//                showFullscreenDialog()
+                intentToPokeballActivity(base64)
 
 //                TODO("Dialog Page Appears")
             }
+
+
         }
 
+    fun intentToPokeballActivity(base64 : String){
+        val intent = Intent(this, PokeballActivity::class.java)
+        intent.putExtra("BASE64", base64)
+        var pokemonSmallList = ""
+        mainMvvm.observePokemonListLiveData().observe(this, Observer {
+            pokemonSmallList = Json.encodeToString(it)
+        })
+        Log.d("EXTRA", pokemonSmallList)
+        intent.putExtra("POKEMON_SMALL_LIST", pokemonSmallList)
+        startActivity(intent)
+    }
     // Launching Storage
     private val choosePictureLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -515,15 +586,14 @@ class MainActivity : AppCompatActivity() {
                         val imageStream = contentResolver.openInputStream(it)
                         val imageBitmap = BitmapFactory.decodeStream(imageStream)
                         selectedImageBitmap = Bitmap.createScaledBitmap(imageBitmap, 224, 224, true)
-                        Log.d("SIZE",
-                            (selectedImageBitmap!!.width.toString() + " "  + selectedImageBitmap!!.height).toString()
-                        )
 
                         // Handle the selected image
                         val base64 = mainMvvm.convertToByte64(selectedImageBitmap!!)
-                        mainMvvm.getPokemonNameByImage(base64) // Sets the Current Pokemon
+//                        mainMvvm.getPokemonNameByImage(base64) // Sets the Current Pokemon
 
-                        showFullscreenDialog()
+//                        showFullscreenDialog()
+
+                        intentToPokeballActivity(base64)
 //                        TODO("Dialog Page Appears")
                     }
                 } catch (e: IOException) {
@@ -626,6 +696,16 @@ class MainActivity : AppCompatActivity() {
                 // Handle case when storage permission is denied
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        hideFullScreenDialog()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        hideFullScreenDialog()
     }
 
 }

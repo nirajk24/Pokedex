@@ -110,7 +110,6 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="4dp"
                     android:visibility="invisible"
-                    app:cardBackgroundColor="#8CFFFFFF"
                     app:cardCornerRadius="8dp"
                     app:cardElevation="0dp">
 

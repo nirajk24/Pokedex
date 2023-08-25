@@ -2,12 +2,14 @@
 <resources>
 
     <style name="FullScreenDialogStyle" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+            <item name="android:windowNoTitle">true</item>
+            <item name="android:windowBackground">@android:color/transparent</item>
+            <item name="android:windowIsFloating">false</item>
+            <item name="android:windowIsTranslucent">true</item>
+            <item name="android:windowContentOverlay">@null</item>
+<!--            <item name="android:windowSoftInputMode">adjustResize</item> &lt;!&ndash; Change to adjustResize &ndash;&gt;-->
+<!--            <item name="android:windowFullscreen">true</item> &lt;!&ndash; Add this line &ndash;&gt;-->
+
     </style>
 
 

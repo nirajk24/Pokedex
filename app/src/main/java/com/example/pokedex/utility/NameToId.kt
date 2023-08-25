@@ -86,6 +86,7 @@ object NameToId {
         "Slowbro" to "#080",
         "Magnemite" to "#081",
         "Magneton" to "#082",
+        "Farfetchd" to "#083",
         "Farfetch'd" to "#083",
         "Doduo" to "#084",
         "Dodrio" to "#085",

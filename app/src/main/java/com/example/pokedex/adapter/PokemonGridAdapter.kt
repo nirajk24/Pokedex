@@ -73,7 +73,7 @@ class PokemonGridAdapter() : RecyclerView.Adapter<PokemonGridAdapter.PokemonView
             // Setting 1st Type Card
             tvPokemonType1.text = pokemonType1
             val pokemonType1Icon = TypeUtils.typeMap[pokemonType1]
-            cvPokemonType1.background.setTint(Color.parseColor("#FF$color"))
+            cvPokemonType1.background.setTint(Color.parseColor("#AA$color"))
             Glide.with(holder.itemView)
                 .load(pokemonType1Icon)
                 .into(ivPokemonType1)

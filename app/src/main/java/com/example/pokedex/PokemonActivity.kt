@@ -145,6 +145,7 @@ class PokemonActivity : AppCompatActivity() {
     private fun setImageTransitionAnim() {
         val extras = intent.extras
         val transitionName = extras?.getString("TRANSITION_NAME")
+        Log.d("TRANSITION", transitionName.toString())
         val data = extras?.getString("POKEMON")
         val source = extras?.getString("SOURCE")
         pokemonList = Json.decodeFromString<List<Pokemon>>(data!!)
@@ -162,6 +163,10 @@ class PokemonActivity : AppCompatActivity() {
             // For Return transition
             val transition = TransitionInflater.from(this).inflateTransition(android.R.transition.move)
             window.sharedElementReturnTransition = transition
+        } else {
+            window.sharedElementReturnTransition = null;
+            window.sharedElementReenterTransition = null;
+            binding.ivPokemonImage.transitionName = null;
         }
 
 

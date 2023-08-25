@@ -1,15 +1,11 @@
 package com.example.pokedex.viewmodel
 
 import android.app.Application
-import android.content.Intent
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.pokedex.R
 import com.example.pokedex.model.Base64Image
 import com.example.pokedex.model.Pokemon
@@ -33,7 +29,7 @@ class MainViewModel(
 ) : AndroidViewModel(application) {
 
 
-    lateinit var onApiResult : ((PokemonSmall) -> Unit)
+    lateinit var onApiResult : ((PokemonSmall, Double) -> Unit)
 
     private var pokemonList = MutableLiveData<List<PokemonSmall>>()
     fun observePokemonListLiveData() = pokemonList
@@ -54,26 +50,33 @@ class MainViewModel(
     }
 
 
-    fun getPokemonNameByImage(raw_data : String){
+    fun fetchPokemonFromApi(raw_data : String){
         val base64Image = Base64Image(raw_data)
 
         RetrofitInstance.api.getPokemonName(base64Image).enqueue(object: Callback<PokemonName>{
             override fun onResponse(call: Call<PokemonName>, response: Response<PokemonName>) {
+                Log.d("API", response.toString())
                 if(response.code() != 500 && response.body() != null){
                     val pokemonName: PokemonName = response.body()!!
 
                     val text = pokemonName.class_name.toString() + "\n" + pokemonName.prob
                     val id = NameToId.nameToIdMap[pokemonName.class_name]
-//                    setCurrentPokemon(getPokemonById(id!!))
-                    onApiResult(getPokemonById(id!!))
+                    Log.d("API", text)
+                    Log.d("API", id.toString())
+                    onApiResult(getPokemonById(id!!), pokemonName.prob.toDouble())
+
+                    Log.d("API", text)
 
 //                    binding.tvBase64.text = text
+                } else {
+                    Log.d("API", "RESPONSE BODY NULL")
+
                 }
             }
 
             override fun onFailure(call: Call<PokemonName>, t: Throwable) {
                 // Log will give us the reason for Failure through t.message
-                Log.d("TEST", t.message.toString())
+                Log.d("API", t.message.toString())
             }
         })
     }

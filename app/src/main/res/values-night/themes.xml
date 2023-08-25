@@ -8,8 +8,10 @@
 <!--        <item name="android:windowLightStatusBar">true</item>-->
 
         <item name="android:navigationBarColor">
-            @color/cardview_dark_background
+            @color/transparent
         </item>
+
+
 
         <item name="android:windowTranslucentNavigation">false</item>
 
@@ -37,6 +39,10 @@
 
     <style name="tint_arrow_up">
         <item name="android:tint">@color/white</item>
+    </style>
+
+    <style name="tint_background">
+        <item name="android:tint">@color/black</item>
     </style>
 
     <style name="search_box_background">

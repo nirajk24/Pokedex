@@ -37,6 +37,8 @@ public class LoadingSpinnerWhite extends androidx.appcompat.widget.AppCompatImag
 
         // Start the animation
         startAnimation();
+
+
     }
 
     /**
