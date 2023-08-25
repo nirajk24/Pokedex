@@ -92,7 +92,7 @@ class PokemonAdapter(private val assetManager: AssetManager) : RecyclerView.Adap
                 tvPokemonType2.text = pokemonType2
 
                 val color2 = ColorUtils.getColorForString(pokemonType2)
-                cvPokemonType2.background.setTint(Color.parseColor("#99$color2"))
+                cvPokemonType2.background.setTint(Color.parseColor("#90$color2"))
 
                 val pokemonType2Icon = TypeUtils.typeMap[pokemonType2]
                 Glide.with(holder.itemView)

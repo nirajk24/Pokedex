@@ -82,7 +82,8 @@ class MainViewModel(
     }
 
     fun getPokemonById(pokemonId : String) : PokemonSmall{
-        val pokemon = observePokemonListLiveData().value?.get(getIdFromString(pokemonId) - 1)
+        val pokemon = observePokemonListLiveData()
+            .value?.get(getIdFromString(pokemonId) - 1)
         return pokemon!!
     }
 
@@ -90,7 +91,8 @@ class MainViewModel(
         // Read csv and get list
         val specificLineIndices = getEvolutionIds(pokemon)
 
-        return readCsvLineByIndex(application, R.raw.pokemon_csv, specificLineIndices.toMutableList())
+        return readCsvLineByIndex(application, R.raw.pokemon_csv,
+            specificLineIndices.toMutableList())
     }
 
     private fun getEvolutionIds(pokemon: PokemonSmall) : List<Int>{
@@ -116,11 +118,14 @@ class MainViewModel(
     fun filterPokemons(searchQuery: String): List<PokemonSmall> {
         val pokemonList = observePokemonListLiveData().value
         if (pokemonList != null) {
-            return pokemonList.filter { pokemon ->
-                pokemon.name.contains(searchQuery, ignoreCase = true) ||
-                        pokemon.id.contains(searchQuery, ignoreCase = true) ||
-                        pokemon.typeofpokemon.any { type -> type.contains(searchQuery, ignoreCase = true) }
-            }
+            if(searchQuery.isNotEmpty()){
+                return pokemonList.filter { pokemon ->
+                    pokemon.name.contains(searchQuery, ignoreCase = true) ||
+                            pokemon.id.contains(searchQuery, ignoreCase = true) ||
+                            pokemon.typeofpokemon.any { type -> type.contains(searchQuery, ignoreCase = true)}
+                }
+            } else
+                return pokemonList
         }
         return emptyList()
     }

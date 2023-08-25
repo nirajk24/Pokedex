@@ -1,29 +1,24 @@
 package com.example.pokedex.fragments
 
-import android.content.res.AssetManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
-import com.example.pokedex.PokemonActivity
+import com.example.pokedex.activity.PokemonActivity
 import com.example.pokedex.databinding.FragmentAboutBinding
 import com.example.pokedex.model.Pokemon
 import com.example.pokedex.utility.ColorUtils
 import com.example.pokedex.viewmodel.PokemonViewModel
-import java.io.IOException
 
 
 class AboutFragment : Fragment() {

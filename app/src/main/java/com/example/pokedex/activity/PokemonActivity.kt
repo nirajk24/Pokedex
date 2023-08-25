@@ -1,9 +1,6 @@
-package com.example.pokedex
+package com.example.pokedex.activity
 
-import android.content.res.AssetManager
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.TransitionInflater
@@ -19,17 +16,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.pokedex.adapter.ViewPagerAdapter
 import com.example.pokedex.databinding.ActivityPokemonBinding
 import com.example.pokedex.model.Pokemon
-import com.example.pokedex.repository.Repository
 import com.example.pokedex.utility.ColorUtils
 import com.example.pokedex.utility.TypeUtils
-import com.example.pokedex.viewmodel.MainViewModel
-import com.example.pokedex.viewmodel.MainViewModelFactory
 import com.example.pokedex.viewmodel.PokemonViewModel
 import com.example.pokedex.viewmodel.PokemonViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import java.io.IOException
 
 class PokemonActivity : AppCompatActivity() {
 

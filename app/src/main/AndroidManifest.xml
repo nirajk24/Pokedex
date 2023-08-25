@@ -26,19 +26,21 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".PokeballActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ProfileActivity"
+            android:name=".activity.PokeballActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PokemonActivity"
+            android:name=".activity.ProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.PokemonActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MainActivity"
             android:exported="true"
+            android:theme="@style/Theme.Pokedex.Splash"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

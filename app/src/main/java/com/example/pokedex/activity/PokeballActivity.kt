@@ -1,17 +1,13 @@
-package com.example.pokedex
+package com.example.pokedex.activity
 
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
-import android.transition.Transition
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.ScaleAnimation
-import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -19,6 +15,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
+import com.example.pokedex.R
 import com.example.pokedex.databinding.ActivityPokeballBinding
 import com.example.pokedex.model.PokemonSmall
 import com.example.pokedex.repository.Repository
@@ -67,7 +64,7 @@ class PokeballActivity : AppCompatActivity() {
 
             pokemon = pokemonSmall
             // Pokemon Caught Confirm
-            if(prob > 0.3) {
+            if(prob > 0.1) {
                 Glide.with(this)
                     .load(pokemonSmall.imageurl)
                     .into(binding.ivPokemonImage)
@@ -142,13 +139,14 @@ class PokeballActivity : AppCompatActivity() {
                 .into(ivPokemonType1)
 
             // Type 2
+            var color2 = ""
             if(pokemonSmall.typeofpokemon.size >= 2){
                 cvPokemonType2.visibility = View.VISIBLE
 
                 val pokemonType2 = pokemon.typeofpokemon[1]
                 tvPokemonType2.text = pokemonType2
 
-                val color2 = ColorUtils.getColorForString(pokemonType2)
+                color2 = ColorUtils.getColorForString(pokemonType2)
                 cvPokemonType2.background.setTint(Color.parseColor("#CC$color2"))
 
                 val pokemonType2Icon = TypeUtils.typeMap[pokemonType2]
@@ -157,10 +155,14 @@ class PokeballActivity : AppCompatActivity() {
                     .into(ivPokemonType2)
             }
 
-            btnHome.background.setTint(Color.parseColor("#AA$color"))
+            btnHome.background.setTint(Color.parseColor("#88$color"))
             btnCollect.background.setTint(Color.parseColor("#AA$color"))
 
-            animateBackgroundColor(color)
+            btnHome.visibility = View.VISIBLE
+            btnCollect.visibility = View.VISIBLE
+
+            color2 = color2.ifEmpty { "00000000" }
+            animateBackgroundColor(color, color2)
 
             val scaleAnimation = ScaleAnimation(
                 0.3f, 1f,  // Start and end scale X
@@ -177,8 +179,8 @@ class PokeballActivity : AppCompatActivity() {
     }
 
 
-    private fun animateBackgroundColor(color: String) {
-        val startColor = Color.parseColor("#00000000") // Replace with your starting color string
+    private fun animateBackgroundColor(color: String, color2 : String) {
+        val startColor = Color.parseColor("#$color2") // Replace with your starting color string
         val endColor = Color.parseColor("#FF$color") // Replace with your target color string
         val circularFillDrawable = CircularFillDrawable(startColor, endColor)
         binding.view.background = circularFillDrawable

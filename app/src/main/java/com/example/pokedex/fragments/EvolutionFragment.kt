@@ -9,8 +9,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.example.pokedex.PokemonActivity
-import com.example.pokedex.R
+import com.example.pokedex.activity.PokemonActivity
 import com.example.pokedex.databinding.FragmentEvolutionBinding
 import com.example.pokedex.model.Pokemon
 import com.example.pokedex.utility.ColorUtils

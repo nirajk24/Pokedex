@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PokeballActivity">
+    tools:context=".activity.PokeballActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pokemonCaught"
@@ -20,11 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-<!--        <ImageView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            style="@style/tint_background"-->
-<!--            android:src="#36FFFFFF"/>-->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:elevation="1dp"
+            android:src="#80959595"/>
 
         <ImageView
             android:id="@+id/ivBack"
@@ -78,7 +82,7 @@
             android:textSize="70dp"
             android:elevation="4dp"
             android:textStyle="bold"
-            style="@style/text_content"/>
+            android:textColor="@color/text_content_white"/>
 
 
         <ImageView
@@ -112,6 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:orientation="horizontal"
+            android:elevation="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvPokemonName">
@@ -179,6 +184,7 @@
             android:orientation="horizontal"
             android:layout_marginHorizontal="16dp"
             app:layout_constraintStart_toStartOf="parent"
+            android:elevation="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/view"
             app:layout_constraintTop_toBottomOf="@+id/layoutType">
@@ -189,10 +195,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:layout_weight="1"
+                android:elevation="2dp"
+                android:visibility="invisible"
                 android:backgroundTint="@color/Flying"
                 android:text="Home"
-                android:textColor="@color/text_sub_head_white"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:textColor="@color/text_sub_head_white" />
 
             <Button
                 android:id="@+id/btnCollect"
@@ -200,6 +207,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:layout_weight="1"
+                android:elevation="2dp"
+                android:visibility="invisible"
                 android:backgroundTint="@color/Flying"
                 android:text="Collect"
                 android:textColor="@color/text_sub_head_white"

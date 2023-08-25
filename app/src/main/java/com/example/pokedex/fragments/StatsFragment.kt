@@ -2,8 +2,6 @@ package com.example.pokedex.fragments
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ClipDrawable
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,12 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.view.animation.TranslateAnimation
-import android.widget.ProgressBar
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.pokedex.PokemonActivity
+import com.example.pokedex.activity.PokemonActivity
 import com.example.pokedex.R
 import com.example.pokedex.adapter.EffectivenessAdapter
 import com.example.pokedex.databinding.FragmentStatsBinding
