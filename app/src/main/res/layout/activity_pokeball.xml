@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.PokeballActivity">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pokemonCaught"
         android:layout_alignParentStart="true"
@@ -27,8 +28,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:elevation="2dp"
+            android:src="#80BCBCBC"/>
+
+        <ImageView
+            android:id="@+id/ivPokemonLoading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:elevation="1dp"
-            android:src="#80959595"/>
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="@id/imgCircle"
+            app:layout_constraintStart_toStartOf="@id/imgCircle"
+            app:layout_constraintTop_toTopOf="@id/imgCircle"
+            app:layout_constraintVertical_bias="0.289" />
 
         <ImageView
             android:id="@+id/ivBack"
@@ -44,6 +58,8 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
 
+
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgCircle"
             android:layout_width="0dp"
@@ -57,6 +73,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/ivPokemonLoading"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:elevation="0dp"-->
+<!--            app:layout_constraintDimensionRatio="1:1"-->
+<!--            android:layout_marginHorizontal="48dp"-->
+<!--            app:layout_constraintVertical_bias="0.34"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
 
         <!--        <TextView-->
         <!--            android:id="@+id/tvInfo"-->
@@ -98,6 +127,9 @@
             app:layout_constraintEnd_toEndOf="@id/imgCircle"
             android:layout_marginTop="32dp" />
 
+
+
+
         <TextView
             android:id="@+id/tvPokemonName"
             android:layout_width="wrap_content"
@@ -125,6 +157,7 @@
                 android:id="@+id/cvPokemonType1"
                 android:layout_width="wrap_content"
                 android:layout_height="28dp"
+                android:visibility="gone"
                 android:layout_marginEnd="4dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp">
@@ -179,14 +212,15 @@
 
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginHorizontal="16dp"
-            app:layout_constraintStart_toStartOf="parent"
             android:elevation="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutType">
 
             <Button
@@ -195,11 +229,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:layout_weight="1"
-                android:elevation="2dp"
-                android:visibility="invisible"
                 android:backgroundTint="@color/Flying"
+                android:elevation="2dp"
                 android:text="Home"
-                android:textColor="@color/text_sub_head_white" />
+                android:textColor="@color/text_sub_head_white"
+                android:visibility="invisible" />
 
             <Button
                 android:id="@+id/btnCollect"
@@ -207,12 +241,12 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:layout_weight="1"
-                android:elevation="2dp"
-                android:visibility="invisible"
                 android:backgroundTint="@color/Flying"
+                android:elevation="2dp"
                 android:text="Collect"
                 android:textColor="@color/text_sub_head_white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
         </LinearLayout>
 

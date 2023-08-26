@@ -105,7 +105,7 @@ class MainViewModel(
         Log.d("CHECK", pokemonEvolutionIds.toString())
         return pokemonEvolutionIds
     }
-    private fun getIdFromString(id: String): Int {
+    fun getIdFromString(id: String): Int {
         var idInt = 0
         val length = id.length
         for(i in 1 until length){

@@ -7,7 +7,7 @@ object ColorUtils {
         "Normal" to "A8A77A",
         "Fire" to "EE8130",
         "Water" to "539AE2",
-        "Electric" to "F7D02C",
+        "Electric" to "EAC733",
         "Grass" to "71C558",
         "Ice" to "96D9D6",
         "Fighting" to "C22E28",

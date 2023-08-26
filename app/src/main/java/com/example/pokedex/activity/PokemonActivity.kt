@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.transition.TransitionInflater
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.doOnPreDraw
@@ -20,6 +21,7 @@ import com.example.pokedex.utility.ColorUtils
 import com.example.pokedex.utility.TypeUtils
 import com.example.pokedex.viewmodel.PokemonViewModel
 import com.example.pokedex.viewmodel.PokemonViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -152,15 +154,26 @@ class PokemonActivity : AppCompatActivity() {
         }
 //        binding.targetImageView.transitionName = transitionName
 
-        if(source == "RV"){
-            // For Return transition
-            val transition = TransitionInflater.from(this).inflateTransition(android.R.transition.move)
-            window.sharedElementReturnTransition = transition
-        } else {
-            window.sharedElementReturnTransition = null;
-            window.sharedElementReenterTransition = null;
-            binding.ivPokemonImage.transitionName = null;
+        when (source) {
+            "RV" -> {
+                // For Return transition
+                val transition = TransitionInflater.from(this).inflateTransition(android.R.transition.move)
+                window.sharedElementReturnTransition = transition
+            }
+            "NOT_RV" -> {
+                val msg = "${pokemonList[0].name} Collected"
+                Snackbar.make(binding.root, msg, Snackbar.LENGTH_SHORT).show()
+                // For Return transition
+                val transition = TransitionInflater.from(this).inflateTransition(android.R.transition.move)
+                window.sharedElementReturnTransition = transition
+            }
+            else -> {
+                window.sharedElementReturnTransition = null
+                window.sharedElementReenterTransition = null
+                binding.ivPokemonImage.transitionName = null
+            }
         }
+
 
 
         Glide.with(binding.ivPokemonImage)

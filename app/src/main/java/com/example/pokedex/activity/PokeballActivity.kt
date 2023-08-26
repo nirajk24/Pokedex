@@ -18,6 +18,7 @@ import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.example.pokedex.R
 import com.example.pokedex.databinding.ActivityPokeballBinding
 import com.example.pokedex.model.PokemonSmall
+import com.example.pokedex.repository.MyPreferences
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.utility.CircularFillDrawable
 import com.example.pokedex.utility.ColorUtils
@@ -47,6 +48,12 @@ class PokeballActivity : AppCompatActivity() {
         setContentView(binding.root)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+
+        Glide.with(this)
+            .asGif()
+            .load(R.drawable.pokeball_loading)
+            .into(binding.ivPokemonLoading)
+
 //        window.navigationBarColor = resources.getColor(R.color.transparent)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.navigationBarColor = ContextCompat.getColor(this, R.color.transparent)
@@ -62,13 +69,13 @@ class PokeballActivity : AppCompatActivity() {
 
         mainMvvm.onApiResult = { pokemonSmall, prob ->
 
+            binding.ivPokemonLoading.visibility = View.GONE
             pokemon = pokemonSmall
             // Pokemon Caught Confirm
             if(prob > 0.1) {
                 Glide.with(this)
                     .load(pokemonSmall.imageurl)
                     .into(binding.ivPokemonImage)
-
 
 //                binding.ivPokemonImage.animate()
                 setCaughtView(pokemonSmall)
@@ -85,14 +92,17 @@ class PokeballActivity : AppCompatActivity() {
 
 
                 binding.btnCollect.setOnClickListener {
+
                     val intent = Intent(this, PokemonActivity::class.java)
                     val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
+
+                    MyPreferences(this).addCollectedPokemon(mainMvvm.getIdFromString(pokemonList[0].id))
 
                     val pokemonData = Json.encodeToString(pokemonList)
                     intent.apply {
                         putExtra("TRANSITION_NAME", pokemon.name)
                         putExtra("POKEMON", pokemonData)
-                        putExtra("SOURCE", "RV")
+                        putExtra("SOURCE", "NOT_RV")
                     }
 
                     val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -131,6 +141,7 @@ class PokeballActivity : AppCompatActivity() {
 
             pokemonId.text = pokemonSmall.id
             // Setting 1st Type Card
+            cvPokemonType1.visibility = View.VISIBLE
             tvPokemonType1.text = pokemonType1
             val pokemonType1Icon = TypeUtils.typeMap[pokemonType1]
             cvPokemonType1.background.setTint(Color.parseColor("#CC$color"))
@@ -186,7 +197,7 @@ class PokeballActivity : AppCompatActivity() {
         binding.view.background = circularFillDrawable
 
 
-        val radiusAnimator = ValueAnimator.ofFloat(.2f, Math.max(binding.view.width, binding.view.height).toFloat())
+        val radiusAnimator = ValueAnimator.ofFloat(.01f, Math.max(binding.view.width, binding.view.height).toFloat())
         radiusAnimator.duration = 1500 // Duration of the animation in milliseconds
         radiusAnimator.interpolator = AccelerateDecelerateInterpolator()
 

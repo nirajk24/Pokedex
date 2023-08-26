@@ -3,13 +3,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="accent">#CC537A</color>
+
+
     <color name="text_black">#FF000000</color>
     <color name="text_white">#FFFFFFFF</color>
 
     <color name="Normal">#A8A77A</color>
     <color name="Fire">#EE8130</color>
     <color name="Water">#6390F0</color>
-    <color name="Electric">#F7D02C</color>
+    <color name="Electric">#EAC733</color>
     <color name="Grass">#7AC74C</color>
 
     <color name="Ice">#96D9D6</color>
@@ -57,10 +60,9 @@
     <color name="shimmer_color_light">#C3C3C3</color>
 
     <color name="background_color">#F2F2F2</color>
-    <color name="accent">#834458</color>
 
 
-
+    <color name="card_background_light">#F2F2F2</color>
 
 
 

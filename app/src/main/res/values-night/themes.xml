@@ -4,6 +4,8 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
 
+        <item name="colorPrimary">@color/accent</item>
+
         <item name="android:statusBarColor">@android:color/transparent</item>
 <!--        <item name="android:windowLightStatusBar">true</item>-->
 
@@ -17,6 +19,9 @@
 
         <item name="android:windowContentTransitions">true</item>
     </style>
+
+
+
 
     <style name="text_head">
         <item name="android:textColor">@color/text_head_white</item>
@@ -47,5 +52,20 @@
 
     <style name="search_box_background">
         <item name="android:background">@drawable/search_box_background_dark</item>
+    </style>
+
+    <style name="tint_next">
+        <item name="android:tint">@color/text_content_white</item>
+    </style>
+
+
+    <style name="card_background_profile">
+        <item name="android:backgroundTint">@color/cardview_dark_background</item>
+    </style>
+
+    <style name="CustomSnackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="android:textColor">@color/text_sub_head_black</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <!-- Add more attributes as needed -->
     </style>
 </resources>

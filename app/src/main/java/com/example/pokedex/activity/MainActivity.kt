@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.PersistableBundle
 import android.provider.MediaStore
 import android.text.Spannable
 import android.text.SpannableString
@@ -27,6 +28,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
@@ -46,6 +48,7 @@ import com.example.pokedex.R
 import com.example.pokedex.adapter.PokemonAdapter
 import com.example.pokedex.adapter.PokemonGridAdapter
 import com.example.pokedex.databinding.ActivityMainBinding
+import com.example.pokedex.repository.MyPreferences
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.viewmodel.MainViewModel
 import com.example.pokedex.viewmodel.MainViewModelFactory
@@ -72,6 +75,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var pokemonGridAdapter: PokemonGridAdapter
 
+
     private val mainMvvm: MainViewModel by lazy {
         val repository = Repository()
         val mainViewModelFactory = MainViewModelFactory(repository, application)
@@ -81,15 +85,19 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.S)
-            installSplashScreen()
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S)
+//        installSplashScreen()
         binding = ActivityMainBinding.inflate(layoutInflater)
+        checkThemeDetails()
+
         setContentView(binding.root)
+
 
 //        window.setDecorFitsSystemWindows(false)
 
 
-        dialog = Dialog(this, R.style.FullScreenDialogStyle)
+
+//        dialog = Dialog(this, R.style.FullScreenDialogStyle)
 //        showFullscreenDialog()
 
 //        binding.shimmerLayoutHome.startShimmer()
@@ -103,8 +111,6 @@ class MainActivity : AppCompatActivity() {
 //            // Make the view visible again
 //        }, 2000)
 
-        binding.shimmerLayoutHome.visibility = View.GONE
-        binding.shimmerCardView.visibility = View.GONE
 
         prepareRecyclerView()
         initializeRecyclerView()
@@ -138,9 +144,51 @@ class MainActivity : AppCompatActivity() {
 //        observeCurrentPokemon()
 
         setUpDialogBox()
-
-
     }
+
+    private fun checkThemeDetails() {
+
+        // Dark Mode
+        when (MyPreferences(this).darkMode) {
+            0 -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                delegate.applyDayNight()
+            }
+            1 -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                delegate.applyDayNight()
+            }
+            2 -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                delegate.applyDayNight()
+            }
+        }
+
+        // Grid size
+        isLinearLayout = when(MyPreferences(this).isLinear){
+            true -> true
+            false -> false
+        }
+    }
+
+
+    private fun checkTheme() {
+        when (MyPreferences(this).darkMode) {
+            0 -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                delegate.applyDayNight()
+            }
+            1 -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                delegate.applyDayNight()
+            }
+            2 -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                delegate.applyDayNight()
+            }
+        }
+    }
+
 
     private fun setUpDialogBox() {
 
@@ -557,8 +605,6 @@ class MainActivity : AppCompatActivity() {
 //                dialog = Dialog(this, R.style.FullScreenDialogStyle)
 //                showFullscreenDialog()
                 intentToPokeballActivity(base64)
-
-//                TODO("Dialog Page Appears")
             }
 
 
@@ -593,7 +639,6 @@ class MainActivity : AppCompatActivity() {
 //                        showFullscreenDialog()
 
                         intentToPokeballActivity(base64)
-//                        TODO("Dialog Page Appears")
                     }
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -697,14 +742,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        hideFullScreenDialog()
+    override fun onResume() {
+        super.onResume()
+//        if(MyPreferences(this).isChanged){
+//            val intent = Intent(applicationContext, MainActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+//            MyPreferences(this).isChanged = false
+//            startActivity(intent)
+//        }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        hideFullScreenDialog()
+    override fun onStart() {
+        super.onStart()
+
+//        if(MyPreferences(this).isChanged){
+//            val intent = Intent(applicationContext, MainActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+//            MyPreferences(this).isChanged = false
+//            startActivity(intent)
+//        }
     }
+
 
 }
