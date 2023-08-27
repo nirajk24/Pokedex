@@ -48,12 +48,18 @@ import com.example.pokedex.R
 import com.example.pokedex.adapter.PokemonAdapter
 import com.example.pokedex.adapter.PokemonGridAdapter
 import com.example.pokedex.databinding.ActivityMainBinding
+import com.example.pokedex.model.Pokemon
 import com.example.pokedex.model.PokemonSmall
 import com.example.pokedex.repository.MyPreferences
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.utility.AvatarUtils
 import com.example.pokedex.viewmodel.MainViewModel
 import com.example.pokedex.viewmodel.MainViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.IOException
@@ -126,7 +132,7 @@ class MainActivity : AppCompatActivity() {
 
 //        observeCurrentPokemon()
 
-        setUpDialogBox()
+//        setUpDialogBox()
     }
 
     private fun checkThemeDetails() {
@@ -155,62 +161,62 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun setUpDialogBox() {
-
-        mainMvvm.onApiResult = { pokemonSmall, prob ->
-
-            // Pokemon Caught Confirm
-            if(prob > 0.5) {
-                Glide.with(this)
-                    .load(pokemonSmall.imageurl)
-                    .into(dialog.findViewById(R.id.ivPokemonImage))
-
-                dialog.apply {
-                    findViewById<ConstraintLayout>(R.id.pokemonCaught).visibility = View.VISIBLE
-                }
-
-//            ViewCompat.setTransitionName(
-//                dialog.findViewById(R.id.imgCurrentPokemon),
-//                pokemonSmall.name
-//            );
-
-//            ViewCompat.setTransitionName(holder.binding.ivPokemonThumb, pokemon.name);
-
-
-                // Go to Pokemon Activity
-                dialog.findViewById<Button>(R.id.btnCollect).setOnClickListener {
-//                dialog.setContentView(0)
-
-
-                    val intent = Intent(this, PokemonActivity::class.java)
-                    val pokemonList = mainMvvm.getPokemonEvolutionList(pokemonSmall)
-                    val sharedImageView = dialog.findViewById<ImageView>(R.id.ivPokemonImage)
-
-                    val data = Json.encodeToString(pokemonList)
-                    intent.apply {
-                        putExtra("TRANSITION_NAME", pokemonSmall.name)
-                        putExtra("POKEMON", data)
-                        putExtra("SOURCE", "DIALOG")
-                    }
-
-//                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                        this,
-//                        sharedImageView,
-//                        pokemonSmall.name
-//                    )
-
-//                    startActivity(intent, options.toBundle())
-                    startActivity(intent)
-
-                }
-            } else {
-                Glide.with(this)
-                    .load(R.drawable.no_pokemon)
-                    .downsample(DownsampleStrategy.AT_MOST)
-                    .into(dialog.findViewById(R.id.ivPokemonImage))
-            }
-        }
-    }
+//    private fun setUpDialogBox() {
+//
+//        mainMvvm.onApiResult = { pokemonSmall, prob ->
+//
+//            // Pokemon Caught Confirm
+//            if(prob > 0.5) {
+//                Glide.with(this)
+//                    .load(pokemonSmall.imageurl)
+//                    .into(dialog.findViewById(R.id.ivPokemonImage))
+//
+//                dialog.apply {
+//                    findViewById<ConstraintLayout>(R.id.pokemonCaught).visibility = View.VISIBLE
+//                }
+//
+////            ViewCompat.setTransitionName(
+////                dialog.findViewById(R.id.imgCurrentPokemon),
+////                pokemonSmall.name
+////            );
+//
+////            ViewCompat.setTransitionName(holder.binding.ivPokemonThumb, pokemon.name);
+//
+//
+//                // Go to Pokemon Activity
+//                dialog.findViewById<Button>(R.id.btnCollect).setOnClickListener {
+////                dialog.setContentView(0)
+//
+//
+//                    val intent = Intent(this, PokemonActivity::class.java)
+//                    val pokemonList = mainMvvm.getPokemonEvolutionList(pokemonSmall)
+//                    val sharedImageView = dialog.findViewById<ImageView>(R.id.ivPokemonImage)
+//
+//                    val data = Json.encodeToString(pokemonList)
+//                    intent.apply {
+//                        putExtra("TRANSITION_NAME", pokemonSmall.name)
+//                        putExtra("POKEMON", data)
+//                        putExtra("SOURCE", "DIALOG")
+//                    }
+//
+////                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+////                        this,
+////                        sharedImageView,
+////                        pokemonSmall.name
+////                    )
+//
+////                    startActivity(intent, options.toBundle())
+//                    startActivity(intent)
+//
+//                }
+//            } else {
+//                Glide.with(this)
+//                    .load(R.drawable.no_pokemon)
+//                    .downsample(DownsampleStrategy.AT_MOST)
+//                    .into(dialog.findViewById(R.id.ivPokemonImage))
+//            }
+//        }
+//    }
 
 
     private fun setFabButton() {
@@ -483,41 +489,34 @@ class MainActivity : AppCompatActivity() {
     // Set om click listener on Pokemon Item
     private fun onPokemonItemClick(){
         pokemonAdapter.onItemClick = { pokemon, transitionName, sharedImageView ->
-            val intent = Intent(this, PokemonActivity::class.java)
-            val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
-
-            val data = Json.encodeToString(pokemonList)
-            intent.apply {
-                putExtra("TRANSITION_NAME", ViewCompat.getTransitionName(sharedImageView))
-                putExtra("POKEMON", data)
-                putExtra("SOURCE", "RV")
-            }
-
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                sharedImageView,
-                ViewCompat.getTransitionName(sharedImageView)!!
-            )
-            startActivity(intent, options.toBundle())
+            intentToPokemonActivity(pokemon, transitionName, sharedImageView)
         }
 
+
         pokemonGridAdapter.onItemClick = { pokemon, transitionName, sharedImageView ->
-            val intent = Intent(this, PokemonActivity::class.java)
+            intentToPokemonActivity(pokemon, transitionName, sharedImageView)
+        }
+    }
+
+    private fun intentToPokemonActivity(pokemon : PokemonSmall, transitionName : String, sharedImageView : View){
+        CoroutineScope(Dispatchers.Default).launch {
             val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
 
             val data = Json.encodeToString(pokemonList)
-            intent.apply {
-                putExtra("TRANSITION_NAME", ViewCompat.getTransitionName(sharedImageView))
+            val intent = Intent(this@MainActivity, PokemonActivity::class.java).apply {
+                putExtra("TRANSITION_NAME", transitionName)
                 putExtra("POKEMON", data)
                 putExtra("SOURCE", "RV")
             }
 
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                sharedImageView,
-                ViewCompat.getTransitionName(sharedImageView)!!
-            )
-            startActivity(intent, options.toBundle())
+            withContext(Dispatchers.Main) {
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this@MainActivity,
+                    sharedImageView,
+                    transitionName
+                )
+                startActivity(intent, options.toBundle())
+            }
         }
     }
     // <-- Permission and Camera Section -->
@@ -687,7 +686,5 @@ class MainActivity : AppCompatActivity() {
 //            startActivity(intent)
 //        }
     }
-
-
 
 }

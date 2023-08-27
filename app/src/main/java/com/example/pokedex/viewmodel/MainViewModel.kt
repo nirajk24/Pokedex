@@ -5,7 +5,9 @@ import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.pokedex.R
 import com.example.pokedex.model.Base64Image
 import com.example.pokedex.model.Pokemon
@@ -15,6 +17,9 @@ import com.example.pokedex.pojo.PokemonName
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.retrofit.RetrofitInstance
 import com.example.pokedex.utility.NameToId
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import retrofit2.Call
@@ -87,12 +92,17 @@ class MainViewModel(
         return pokemon!!
     }
 
-    fun getPokemonEvolutionList(pokemon: PokemonSmall): List<Pokemon> {
-        // Read csv and get list
-        val specificLineIndices = getEvolutionIds(pokemon)
-
-        return readCsvLineByIndex(application, R.raw.pokemon_csv,
-            specificLineIndices.toMutableList())
+    suspend fun getPokemonEvolutionList(pokemon: PokemonSmall): List<Pokemon> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val specificLineIndices = getEvolutionIds(pokemon)
+                readCsvLineByIndex(application, R.raw.pokemon_csv, specificLineIndices.toMutableList())
+            } catch (e: Exception) {
+                // Handle exception, you might want to throw a custom exception or return an empty list
+                e.printStackTrace()
+                emptyList()
+            }
+        }
     }
 
     private fun getEvolutionIds(pokemon: PokemonSmall) : List<Int>{

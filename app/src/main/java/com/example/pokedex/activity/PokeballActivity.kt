@@ -27,6 +27,10 @@ import com.example.pokedex.utility.ColorUtils
 import com.example.pokedex.utility.TypeUtils
 import com.example.pokedex.viewmodel.MainViewModel
 import com.example.pokedex.viewmodel.MainViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -127,24 +131,28 @@ class PokeballActivity : AppCompatActivity() {
     }
 
     private fun intentToPokemonActivity() {
-        val intent = Intent(this, PokemonActivity::class.java)
-        val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
+        CoroutineScope(Dispatchers.Default).launch {
+            val intent = Intent(this@PokeballActivity, PokemonActivity::class.java)
+            val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
 
-        MyPreferences(this).addCollectedPokemon(mainMvvm.getIdFromString(pokemonList[0].id))
+            MyPreferences(this@PokeballActivity).addCollectedPokemon(mainMvvm.getIdFromString(pokemonList[0].id))
 
-        val pokemonData = Json.encodeToString(pokemonList)
-        intent.apply {
-            putExtra("TRANSITION_NAME", pokemon.name)
-            putExtra("POKEMON", pokemonData)
-            putExtra("SOURCE", "NOT_RV")
+            val pokemonData = Json.encodeToString(pokemonList)
+            intent.apply {
+                putExtra("TRANSITION_NAME", pokemon.name)
+                putExtra("POKEMON", pokemonData)
+                putExtra("SOURCE", "NOT_RV")
+            }
+
+            withContext(Dispatchers.Main) {
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this@PokeballActivity,
+                    binding.ivPokemonImage,
+                    pokemon.name
+                )
+                startActivity(intent, options.toBundle())
+            }
         }
-
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            this,
-            binding.ivPokemonImage,
-            pokemon.name
-        )
-        startActivity(intent, options.toBundle())
     }
 
     private fun setCaughtView(pokemonSmall : PokemonSmall) {

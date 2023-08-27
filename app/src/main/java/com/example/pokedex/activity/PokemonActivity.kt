@@ -59,36 +59,6 @@ class PokemonActivity : AppCompatActivity() {
 
     }
 
-//    private fun initializeShadowImage() {
-//        val assetManager: AssetManager? = assets
-//
-//        try {
-//            val id = getIdFromString(pokemonList[0].id)
-//            // Open the image file as an InputStream using the context's assetManager
-//            val inputStream = assetManager?.open("images/$id.png")
-//
-//            // Use BitmapFactory to decode the InputStream into a Bitmap
-//            val bitmap = BitmapFactory.decodeStream(inputStream)
-//
-//            binding.ivPokemonImage2.setImageBitmap(bitmap)
-//
-//
-//        } catch (e: IOException) {
-//            // Handle exceptions
-//            e.printStackTrace()
-//        }
-//
-//    }
-
-    private fun getIdFromString(id: String): Int {
-        var idInt = 0
-        val length = id.length
-        for(i in 1 until length){
-            idInt = (idInt * 10) + id[i].toString().toInt()
-        }
-
-        return idInt
-    }
 
     private fun initializeTopImage() {
 
@@ -148,7 +118,7 @@ class PokemonActivity : AppCompatActivity() {
         ViewCompat.setTransitionName(binding.ivPokemonImage, transitionName)
 
         // Start the shared element transition
-        supportPostponeEnterTransition()
+//        supportPostponeEnterTransition()
         binding.ivPokemonImage.doOnPreDraw {
             supportStartPostponedEnterTransition()
         }
