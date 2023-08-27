@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -19,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.example.pokedex.R
 import com.example.pokedex.databinding.ActivityPokeballBinding
+import com.example.pokedex.model.Pokemon
 import com.example.pokedex.model.PokemonSmall
 import com.example.pokedex.repository.MyPreferences
 import com.example.pokedex.repository.Repository
@@ -39,7 +41,7 @@ class PokeballActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityPokeballBinding
 
-    private lateinit var pokemon : PokemonSmall
+    private lateinit var pokemonCaught : Pokemon
 
 
     private val mainMvvm: MainViewModel by lazy {
@@ -55,6 +57,7 @@ class PokeballActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
 
+
         Glide.with(this)
             .asGif()
             .load(R.drawable.pokeball_loading_new)
@@ -65,10 +68,14 @@ class PokeballActivity : AppCompatActivity() {
         window.navigationBarColor = ContextCompat.getColor(this, R.color.transparent)
 
 
-        val base64 = intent.extras?.getString("BASE64")
-        val data = intent.extras?.getString("POKEMON_SMALL_LIST")
 
-        mainMvvm.observePokemonListLiveData().value = Json.decodeFromString(data!!)
+        val base64 = intent.extras?.getString("BASE64")
+//        val data = intent.extras?.getString("POKEMON_SMALL_LIST")
+
+
+//        mainMvvm.observePokemonListLiveData().value = Json.decodeFromString(data!!)
+
+        initializeData()
 
 
         mainMvvm.fetchPokemonFromApi(base64!!)
@@ -77,28 +84,35 @@ class PokeballActivity : AppCompatActivity() {
             onBackPressed()
         }
 
+
         onApiResult()
 
 
 
     }
 
+    private fun initializeData() {
+        val inputStream = resources.openRawResource(R.raw.pokemon)
+        mainMvvm.initializePokemon(inputStream)
+        inputStream.close()
+    }
+
     private fun onApiResult() {
-        mainMvvm.onApiResult = { pokemonSmall, prob ->
+        mainMvvm.onApiResult = { pokemon, prob ->
 
             Handler(Looper.getMainLooper()).postDelayed({
 
 
             binding.ivPokemonLoading.visibility = View.GONE
-            pokemon = pokemonSmall
+            pokemonCaught = pokemon
             // Pokemon Caught Confirm
             if(prob > 0.1) {
                 Glide.with(this)
-                    .load(pokemonSmall.imageurl)
+                    .load(pokemon.imageurl)
                     .into(binding.ivPokemonImage)
 
 //                binding.ivPokemonImage.animate()
-                setCaughtView(pokemonSmall)
+                setCaughtView(pokemonCaught)
                 // Go to Pokemon Activity
 
                 binding.btnHome.setOnClickListener {
@@ -133,13 +147,13 @@ class PokeballActivity : AppCompatActivity() {
     private fun intentToPokemonActivity() {
         CoroutineScope(Dispatchers.Default).launch {
             val intent = Intent(this@PokeballActivity, PokemonActivity::class.java)
-            val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
+            val pokemonList = mainMvvm.getPokemonEvolutionList(pokemonCaught)
 
             MyPreferences(this@PokeballActivity).addCollectedPokemon(mainMvvm.getIdFromString(pokemonList[0].id))
 
             val pokemonData = Json.encodeToString(pokemonList)
             intent.apply {
-                putExtra("TRANSITION_NAME", pokemon.name)
+                putExtra("TRANSITION_NAME", pokemonCaught.name)
                 putExtra("POKEMON", pokemonData)
                 putExtra("SOURCE", "NOT_RV")
             }
@@ -148,24 +162,24 @@ class PokeballActivity : AppCompatActivity() {
                 val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this@PokeballActivity,
                     binding.ivPokemonImage,
-                    pokemon.name
+                    pokemonCaught.name
                 )
                 startActivity(intent, options.toBundle())
             }
         }
     }
 
-    private fun setCaughtView(pokemonSmall : PokemonSmall) {
+    private fun setCaughtView(pokemon: Pokemon) {
         binding.apply {
 
-            tvPokemonName.text = pokemonSmall.name
+            tvPokemonName.text = pokemon.name
 
             val pokemonType1 = pokemon.typeofpokemon[0]
 
             val color = ColorUtils.getColorForString(pokemonType1)
 
 
-            pokemonId.text = pokemonSmall.id
+            pokemonId.text = pokemon.id
             // Setting 1st Type Card
             cvPokemonType1.visibility = View.VISIBLE
             tvPokemonType1.text = pokemonType1
@@ -177,7 +191,7 @@ class PokeballActivity : AppCompatActivity() {
 
             // Type 2
             var color2 = ""
-            if(pokemonSmall.typeofpokemon.size >= 2){
+            if(pokemon.typeofpokemon.size >= 2){
                 cvPokemonType2.visibility = View.VISIBLE
 
                 val pokemonType2 = pokemon.typeofpokemon[1]

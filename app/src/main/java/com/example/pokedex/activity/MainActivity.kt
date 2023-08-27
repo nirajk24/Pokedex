@@ -420,7 +420,7 @@ class MainActivity : AppCompatActivity() {
 
     // Loading Pokemon data from Json
     private fun initializeData() {
-        val inputStream = resources.openRawResource(R.raw.pokemon_small)
+        val inputStream = resources.openRawResource(R.raw.pokemon)
         mainMvvm.initializePokemon(inputStream)
         inputStream.close()
     }
@@ -498,7 +498,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun intentToPokemonActivity(pokemon : PokemonSmall, transitionName : String, sharedImageView : View){
+    private fun intentToPokemonActivity(pokemon : Pokemon, transitionName : String, sharedImageView : View){
         CoroutineScope(Dispatchers.Default).launch {
             val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
 
@@ -545,15 +545,17 @@ class MainActivity : AppCompatActivity() {
     private fun intentToPokeballActivity(base64 : String){
         val intent = Intent(this, PokeballActivity::class.java)
         intent.putExtra("BASE64", base64)
-        var pokemonSmallList = ""
-        mainMvvm.observePokemonListLiveData().observe(this, Observer {
-            pokemonSmallList = Json.encodeToString(it)
-        })
-        Log.d("EXTRA", pokemonSmallList)
-        intent.putExtra("POKEMON_SMALL_LIST", pokemonSmallList)
+//        var pokemonList = ""
+//        mainMvvm.observePokemonListLiveData().observe(this, Observer {
+//            pokemonList = Json.encodeToString(it)
+//        })
+//        Log.d("EXTRA", pokemonList)
+//        intent.putExtra("POKEMON_SMALL_LIST", pokemonList)
         startActivity(intent)
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
+
+
     // Launching Storage
     private val choosePictureLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->

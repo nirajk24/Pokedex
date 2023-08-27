@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.pokedex.databinding.PokemonCardBinding
+import com.example.pokedex.model.Pokemon
 import com.example.pokedex.model.PokemonSmall
 import com.example.pokedex.utility.ColorUtils
 import com.example.pokedex.utility.TypeUtils
@@ -20,23 +21,24 @@ import com.example.pokedex.utility.TypeUtils
 class PokemonGridAdapter() : RecyclerView.Adapter<PokemonGridAdapter.PokemonViewHolder>() {
 
 
-    lateinit var onItemClick : ((PokemonSmall, String, View) -> Unit)
+    lateinit var onItemClick : ((Pokemon, String, View) -> Unit)
 
     class PokemonViewHolder(val binding : PokemonCardBinding)
         : RecyclerView.ViewHolder(binding.root)
 
 
-    private val diffUtil = object: DiffUtil.ItemCallback<PokemonSmall>(){  // Created an object of DiffUtil ItemCallBack class
-        override fun areItemsTheSame(oldItem: PokemonSmall, newItem: PokemonSmall): Boolean {
+    private val diffUtil = object: DiffUtil.ItemCallback<Pokemon>(){  // Created an object of DiffUtil ItemCallBack class
+        override fun areItemsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean {
             // checks if the items are same
             return oldItem.id == newItem.id  // returns true if item id is same
         }
 
-        override fun areContentsTheSame(oldItem: PokemonSmall, newItem: PokemonSmall): Boolean {
+        override fun areContentsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean {
             // check if the contents of item same
             return oldItem == newItem  // returns true if the items are same
         }
     }
+
     // does something
     val differ = AsyncListDiffer(this, diffUtil)
 

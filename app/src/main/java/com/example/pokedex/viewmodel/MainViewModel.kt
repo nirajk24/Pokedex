@@ -12,7 +12,6 @@ import com.example.pokedex.R
 import com.example.pokedex.model.Base64Image
 import com.example.pokedex.model.Pokemon
 import com.example.pokedex.model.PokemonSmall
-import com.example.pokedex.model.readCsvLineByIndex
 import com.example.pokedex.pojo.PokemonName
 import com.example.pokedex.repository.Repository
 import com.example.pokedex.retrofit.RetrofitInstance
@@ -34,9 +33,9 @@ class MainViewModel(
 ) : AndroidViewModel(application) {
 
 
-    lateinit var onApiResult : ((PokemonSmall, Double) -> Unit)
+    lateinit var onApiResult : ((Pokemon, Double) -> Unit)
 
-    private var pokemonList = MutableLiveData<List<PokemonSmall>>()
+    private var pokemonList = MutableLiveData<List<Pokemon>>()
     fun observePokemonListLiveData() = pokemonList
 
 //    private lateinit var currentPokemon : MutableLiveData<PokemonSmall>
@@ -50,8 +49,10 @@ class MainViewModel(
         val jsonString = inputStream.bufferedReader().use { it.readText() }
 
         val json = Json { ignoreUnknownKeys = true }
-        val pokemonArray: Array<PokemonSmall> = json.decodeFromString(jsonString)
+        val pokemonArray: Array<Pokemon> = json.decodeFromString(jsonString)
         pokemonList.value = pokemonArray.toList()
+
+        Log.d("CHECK", pokemonList.toString())
     }
 
 
@@ -60,52 +61,58 @@ class MainViewModel(
 
         RetrofitInstance.api.getPokemonName(base64Image).enqueue(object: Callback<PokemonName>{
             override fun onResponse(call: Call<PokemonName>, response: Response<PokemonName>) {
-                Log.d("API", response.toString())
                 if(response.code() != 500 && response.body() != null){
                     val pokemonName: PokemonName = response.body()!!
 
-                    val text = pokemonName.class_name.toString() + "\n" + pokemonName.prob
                     val id = NameToId.nameToIdMap[pokemonName.class_name]
-                    Log.d("API", text)
-                    Log.d("API", id.toString())
+
                     onApiResult(getPokemonById(id!!), pokemonName.prob.toDouble())
-
-                    Log.d("API", text)
-
-//                    binding.tvBase64.text = text
-                } else {
-                    Log.d("API", "RESPONSE BODY NULL")
 
                 }
             }
 
             override fun onFailure(call: Call<PokemonName>, t: Throwable) {
                 // Log will give us the reason for Failure through t.message
-                Log.d("API", t.message.toString())
+                Log.d("TEST", t.message.toString())
             }
         })
     }
 
-    fun getPokemonById(pokemonId : String) : PokemonSmall{
+    fun getPokemonById(pokemonId : String) : Pokemon{
         val pokemon = observePokemonListLiveData()
             .value?.get(getIdFromString(pokemonId) - 1)
         return pokemon!!
     }
 
-    suspend fun getPokemonEvolutionList(pokemon: PokemonSmall): List<Pokemon> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val specificLineIndices = getEvolutionIds(pokemon)
-                readCsvLineByIndex(application, R.raw.pokemon_csv, specificLineIndices.toMutableList())
-            } catch (e: Exception) {
-                // Handle exception, you might want to throw a custom exception or return an empty list
-                e.printStackTrace()
-                emptyList()
+    suspend fun getPokemonEvolutionList(pokemon: Pokemon): List<Pokemon> = withContext(Dispatchers.Default) {
+        val pokemonList = mutableListOf<Pokemon>()
+        val pokemons = observePokemonListLiveData().value
+
+        // Create a map to associate Pokémon IDs with their indices
+        val pokemonIdToIndexMap = mutableMapOf<Int, Int>()
+        pokemons?.forEachIndexed { index, p ->
+            pokemonIdToIndexMap[getIdFromString(p.id)] = index
+        }
+
+        // Add the initial Pokémon to the list
+        pokemonList.add(pokemon)
+
+        // Add evolutions based on the map
+        for (id in pokemon.evolutions) {
+            val idInt = getIdFromString(id)
+            val index = pokemonIdToIndexMap[idInt]
+            if (pokemons != null) {
+                if (index != null && pokemons.size >= index) {
+                    pokemonList.add(pokemons[index])
+                }
             }
         }
+
+        return@withContext pokemonList
     }
 
-    private fun getEvolutionIds(pokemon: PokemonSmall) : List<Int>{
+
+    private fun getEvolutionIds(pokemon: Pokemon) : List<Int>{
         val pokemonEvolutionIds = mutableListOf<Int>()
         pokemonEvolutionIds.add(getIdFromString(pokemon.id))
         for(id in pokemon.evolutions){
@@ -115,6 +122,8 @@ class MainViewModel(
         Log.d("CHECK", pokemonEvolutionIds.toString())
         return pokemonEvolutionIds
     }
+
+
     fun getIdFromString(id: String): Int {
         var idInt = 0
         val length = id.length
@@ -125,7 +134,7 @@ class MainViewModel(
         return idInt
     }
 
-    fun filterPokemons(searchQuery: String): List<PokemonSmall> {
+    fun filterPokemons(searchQuery: String): List<Pokemon> {
         val pokemonList = observePokemonListLiveData().value
         if (pokemonList != null) {
             if (searchQuery.isNotEmpty()) {
