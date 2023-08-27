@@ -11,10 +11,14 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.ViewCompat
 import com.example.pokedex.R
+import com.example.pokedex.databinding.ActivityAvatarBinding
 import com.example.pokedex.databinding.ActivityProfileBinding
 import com.example.pokedex.databinding.TempBinding
 import com.example.pokedex.repository.MyPreferences
+import com.example.pokedex.utility.AvatarUtils
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -28,9 +32,21 @@ class ProfileActivity : AppCompatActivity() {
         initialLayout()
         setName()
 
-//        setAvatar()
+        setAvatar()
         setGridSize()
         setTheme()
+    }
+
+    private fun setAvatar() {
+        binding.layoutAvatar.setOnClickListener {
+            intent = Intent(this,AvatarActivity::class.java)
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                binding.cvProfilePic,
+                ViewCompat.getTransitionName(binding.cvProfilePic)!!
+            )
+            startActivity(intent, options.toBundle())
+        }
     }
 
     private fun initialLayout() {
@@ -38,6 +54,8 @@ class ProfileActivity : AppCompatActivity() {
         binding.tvUsername.text = MyPreferences(this).username
 
         // Avatar
+        val currentAvatar = MyPreferences(this).currentAvatar
+        binding.ivProfilePic.setImageResource(AvatarUtils.avatars[currentAvatar])
 
         // Number of Pokemons
         val pokemonsCount = MyPreferences(this).collectedPokemonCount

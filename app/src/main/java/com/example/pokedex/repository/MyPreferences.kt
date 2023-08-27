@@ -8,12 +8,12 @@ class MyPreferences(context: Context?) {
     companion object {
         private const val DARK_STATUS = "DARK_STATUS"
         private const val GRID_STATUS = "GRID_STATUS"
-        private const val AVATAR = "AVATAR"
         private const val USERNAME = "USERNAME"
         private const val IS_CHANGED = "IS_CHANGED"
 
         private const val POKEMON_COLLECTED = "POKEMON_COLLECTED"
-        private const val POKEMON_COLLECTED_COUNT = "POKEMON_COLLECTED_COUNT"
+
+        private const val CURRENT_AVATAR = "CURRENT_AVATAR"
     }
 
     private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -23,9 +23,6 @@ class MyPreferences(context: Context?) {
 
     var isLinear = preferences.getBoolean(GRID_STATUS, true)
         set(value) = preferences.edit().putBoolean(GRID_STATUS, value).apply()
-
-    var avatar = preferences.getInt(AVATAR, 1)
-        set(value) = preferences.edit().putInt(AVATAR, value).apply()
 
     var username = preferences.getString(USERNAME, "Set Username")
         set(value) = preferences.edit().putString(USERNAME, value).apply()
@@ -55,4 +52,7 @@ class MyPreferences(context: Context?) {
     val collectedPokemonCount: Int
         get() = collectedPokemons.size
 
+
+    var currentAvatar = preferences.getInt(CURRENT_AVATAR, 0)
+        set(value) = preferences.edit().putInt(CURRENT_AVATAR, value).apply()
 }

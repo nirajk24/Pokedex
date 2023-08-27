@@ -16,11 +16,6 @@ class EffectivenessAdapter() : RecyclerView.Adapter<EffectivenessAdapter.Effecti
         : RecyclerView.ViewHolder(binding.root)
 
     private val typeList = ColorUtils.getAllKeys()
-    private val colorMapping = mapOf(
-        -1 to "F5FF3F3F",
-        1 to "F53FFF49",
-        0 to "F5D6B140"
-    )
 
     private val numberMapping = mapOf(
         0 to "0",
@@ -30,8 +25,6 @@ class EffectivenessAdapter() : RecyclerView.Adapter<EffectivenessAdapter.Effecti
         200 to "2",
         400 to "4"
     )
-
-
 
     private val diffUtil = object: DiffUtil.ItemCallback<Int>(){  // Created an object of DiffUtil ItemCallBack class
         override fun areItemsTheSame(oldItem: Int, newItem: Int): Boolean {
