@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.pokedex.databinding.PokemonCardBinding
@@ -20,7 +21,6 @@ class PokemonGridAdapter() : RecyclerView.Adapter<PokemonGridAdapter.PokemonView
 
 
     lateinit var onItemClick : ((PokemonSmall, String, View) -> Unit)
-
 
     class PokemonViewHolder(val binding : PokemonCardBinding)
         : RecyclerView.ViewHolder(binding.root)
@@ -52,6 +52,8 @@ class PokemonGridAdapter() : RecyclerView.Adapter<PokemonGridAdapter.PokemonView
 
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
 
+        // Making Visibility Invisible so it hides after changes in list after search event
+        holder.binding.cvPokemonType2.visibility = View.INVISIBLE
 
         val pokemon = differ.currentList[position]
 
@@ -60,6 +62,7 @@ class PokemonGridAdapter() : RecyclerView.Adapter<PokemonGridAdapter.PokemonView
         Glide.with(holder.itemView)
             .load(pokemon.imageurl)
             .apply(RequestOptions().downsample(DownsampleStrategy.AT_MOST))
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .into(holder.binding.ivPokemonThumb)
 
         holder.binding.apply {

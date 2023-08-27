@@ -49,6 +49,7 @@ class AvatarActivity : AppCompatActivity() {
     private fun onDoneClick() {
         binding.ivDone.setOnClickListener(){
             MyPreferences(this).currentAvatar = currentAvatarPosition
+            onBackPressed()
         }
     }
 
@@ -66,7 +67,7 @@ class AvatarActivity : AppCompatActivity() {
         avatarAdapter.onItemClick = { avatarPosition ->
             binding.ivDone.visibility = View.VISIBLE
             binding.ivProfilePic.setImageResource(AvatarUtils.avatars[avatarPosition])
-
+            currentAvatarPosition = avatarPosition
         }
     }
 

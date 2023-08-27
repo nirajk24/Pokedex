@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Theme.Pokedex.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#f1f1f1</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/splashh</item>
-        <item name="postSplashScreenTheme">@style/Base.Theme.Pokedex</item>
-    </style>
-</resources>

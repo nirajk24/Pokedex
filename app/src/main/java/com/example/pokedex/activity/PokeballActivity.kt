@@ -4,6 +4,8 @@ import android.animation.ValueAnimator
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -51,7 +53,7 @@ class PokeballActivity : AppCompatActivity() {
 
         Glide.with(this)
             .asGif()
-            .load(R.drawable.pokeball_loading)
+            .load(R.drawable.pokeball_loading_new)
             .into(binding.ivPokemonLoading)
 
 //        window.navigationBarColor = resources.getColor(R.color.transparent)
@@ -67,7 +69,21 @@ class PokeballActivity : AppCompatActivity() {
 
         mainMvvm.fetchPokemonFromApi(base64!!)
 
+        binding.ivBack.setOnClickListener {
+            onBackPressed()
+        }
+
+        onApiResult()
+
+
+
+    }
+
+    private fun onApiResult() {
         mainMvvm.onApiResult = { pokemonSmall, prob ->
+
+            Handler(Looper.getMainLooper()).postDelayed({
+
 
             binding.ivPokemonLoading.visibility = View.GONE
             pokemon = pokemonSmall
@@ -84,49 +100,51 @@ class PokeballActivity : AppCompatActivity() {
                 binding.btnHome.setOnClickListener {
                     onBackPressed()
                 }
-                binding.ivBack.setOnClickListener {
-                    onBackPressed()
-                }
 
                 binding.pokemonCaught.visibility = View.VISIBLE
 
 
                 binding.btnCollect.setOnClickListener {
-
-                    val intent = Intent(this, PokemonActivity::class.java)
-                    val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
-
-                    MyPreferences(this).addCollectedPokemon(mainMvvm.getIdFromString(pokemonList[0].id))
-
-                    val pokemonData = Json.encodeToString(pokemonList)
-                    intent.apply {
-                        putExtra("TRANSITION_NAME", pokemon.name)
-                        putExtra("POKEMON", pokemonData)
-                        putExtra("SOURCE", "NOT_RV")
-                    }
-
-                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        this,
-                        binding.ivPokemonImage,
-                        pokemon.name
-                    )
-                    startActivity(intent, options.toBundle())
+                    intentToPokemonActivity()
                 }
-//                    startActivity(intent)
             } else {
+                binding.ivNoPokemonImage.visibility = View.VISIBLE
+                binding.tvNoPokemonFound.visibility = View.VISIBLE
                 Glide.with(this)
                     .load(R.drawable.no_pokemon)
                     .downsample(DownsampleStrategy.AT_MOST)
-                    .into(binding.ivPokemonImage)
+                    .into(binding.ivNoPokemonImage)
+
+
 
                 binding.btnHome.setOnClickListener {
                     onBackPressed()
                 }
             }
+            }, 2000)
+
+        }
+    }
+
+    private fun intentToPokemonActivity() {
+        val intent = Intent(this, PokemonActivity::class.java)
+        val pokemonList = mainMvvm.getPokemonEvolutionList(pokemon)
+
+        MyPreferences(this).addCollectedPokemon(mainMvvm.getIdFromString(pokemonList[0].id))
+
+        val pokemonData = Json.encodeToString(pokemonList)
+        intent.apply {
+            putExtra("TRANSITION_NAME", pokemon.name)
+            putExtra("POKEMON", pokemonData)
+            putExtra("SOURCE", "NOT_RV")
         }
 
-
-
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this,
+            binding.ivPokemonImage,
+            pokemon.name
+        )
+        startActivity(intent, options.toBundle())
     }
 
     private fun setCaughtView(pokemonSmall : PokemonSmall) {
@@ -169,7 +187,7 @@ class PokeballActivity : AppCompatActivity() {
             btnHome.background.setTint(Color.parseColor("#88$color"))
             btnCollect.background.setTint(Color.parseColor("#AA$color"))
 
-            btnHome.visibility = View.VISIBLE
+//            btnHome.visibility = View.VISIBLE
             btnCollect.visibility = View.VISIBLE
 
             color2 = color2.ifEmpty { "00000000" }
@@ -191,14 +209,14 @@ class PokeballActivity : AppCompatActivity() {
 
 
     private fun animateBackgroundColor(color: String, color2 : String) {
-        val startColor = Color.parseColor("#$color2") // Replace with your starting color string
+        val startColor = Color.parseColor("#000000") // Replace with your starting color string
         val endColor = Color.parseColor("#FF$color") // Replace with your target color string
         val circularFillDrawable = CircularFillDrawable(startColor, endColor)
         binding.view.background = circularFillDrawable
 
 
         val radiusAnimator = ValueAnimator.ofFloat(.01f, Math.max(binding.view.width, binding.view.height).toFloat())
-        radiusAnimator.duration = 1500 // Duration of the animation in milliseconds
+        radiusAnimator.duration = 1000 // Duration of the animation in milliseconds
         radiusAnimator.interpolator = AccelerateDecelerateInterpolator()
 
         radiusAnimator.addUpdateListener { animator ->

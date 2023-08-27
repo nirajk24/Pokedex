@@ -8,36 +8,32 @@ import android.os.Bundle
 import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import com.example.pokedex.R
-import com.example.pokedex.databinding.ActivityAvatarBinding
 import com.example.pokedex.databinding.ActivityProfileBinding
-import com.example.pokedex.databinding.TempBinding
 import com.example.pokedex.repository.MyPreferences
 import com.example.pokedex.utility.AvatarUtils
 
 class ProfileActivity : AppCompatActivity() {
 
-    private lateinit var binding : TempBinding
+    private lateinit var binding : ActivityProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = TempBinding.inflate(layoutInflater)
+        binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
         initialLayout()
         setName()
 
-        setAvatar()
+        setAvatarActivity()
         setGridSize()
         setTheme()
     }
 
-    private fun setAvatar() {
+    private fun setAvatarActivity() {
         binding.layoutAvatar.setOnClickListener {
             intent = Intent(this,AvatarActivity::class.java)
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -45,6 +41,7 @@ class ProfileActivity : AppCompatActivity() {
                 binding.cvProfilePic,
                 ViewCompat.getTransitionName(binding.cvProfilePic)!!
             )
+
             startActivity(intent, options.toBundle())
         }
     }
@@ -53,9 +50,9 @@ class ProfileActivity : AppCompatActivity() {
         // Username
         binding.tvUsername.text = MyPreferences(this).username
 
-        // Avatar
-        val currentAvatar = MyPreferences(this).currentAvatar
-        binding.ivProfilePic.setImageResource(AvatarUtils.avatars[currentAvatar])
+//        // Avatar
+//        val currentAvatar = MyPreferences(this).currentAvatar
+//        binding.ivProfilePic.setImageResource(AvatarUtils.avatars[currentAvatar])
 
         // Number of Pokemons
         val pokemonsCount = MyPreferences(this).collectedPokemonCount
@@ -209,5 +206,19 @@ class ProfileActivity : AppCompatActivity() {
             super.onBackPressed()
 
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val currentAvatar = MyPreferences(this).currentAvatar
+        binding.ivProfilePic.setImageResource(AvatarUtils.avatars[currentAvatar])
+
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        val currentAvatar = MyPreferences(this).currentAvatar
+        binding.ivProfilePic.setImageResource(AvatarUtils.avatars[currentAvatar])
+
     }
 }

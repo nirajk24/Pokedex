@@ -22,6 +22,19 @@
             android:layout_height="match_parent" />
 
         <ImageView
+            android:id="@+id/ivPokemonLoading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="3dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pokeball_loading_new"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="@id/imgCircle"
+            app:layout_constraintStart_toStartOf="@id/imgCircle"
+            app:layout_constraintTop_toTopOf="@id/imgCircle"/>
+
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,20 +42,9 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:elevation="2dp"
-            android:src="#80BCBCBC"/>
+            android:src="#7ABCBCBC"/>
 
-        <ImageView
-            android:id="@+id/ivPokemonLoading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:elevation="1dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/imgCircle"
-            app:layout_constraintStart_toStartOf="@id/imgCircle"
-            app:layout_constraintTop_toTopOf="@id/imgCircle"
-            app:layout_constraintVertical_bias="0.289" />
+
 
         <ImageView
             android:id="@+id/ivBack"
@@ -128,6 +130,35 @@
             android:layout_marginTop="32dp" />
 
 
+        <ImageView
+            android:id="@+id/ivNoPokemonImage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            android:elevation="8dp"
+            android:layout_marginTop="-24dp"
+            android:transitionName="transition_image"
+            app:layout_constraintTop_toTopOf="@id/imgCircle"
+            app:layout_constraintStart_toStartOf="@id/imgCircle"
+            app:layout_constraintEnd_toEndOf="@id/imgCircle" />
+
+        <TextView
+            android:id="@+id/tvNoPokemonFound"
+            style="@style/text_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No pokemon Found!!\n Try again."
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivNoPokemonImage" />
+
+
+
 
 
         <TextView
@@ -140,7 +171,7 @@
             android:layout_marginTop="16dp"
             android:textSize="24sp"
             android:textStyle="bold"
-            style="@style/text_sub_head"/>
+            android:textColor="@color/text_sub_head_white"/>
 
         <LinearLayout
             android:id="@+id/layoutType"
@@ -218,6 +249,7 @@
             android:layout_marginHorizontal="16dp"
             android:elevation="2dp"
             android:orientation="horizontal"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -233,14 +265,13 @@
                 android:elevation="2dp"
                 android:text="Home"
                 android:textColor="@color/text_sub_head_white"
-                android:visibility="invisible" />
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/btnCollect"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:layout_weight="1"
                 android:backgroundTint="@color/Flying"
                 android:elevation="2dp"
                 android:text="Collect"

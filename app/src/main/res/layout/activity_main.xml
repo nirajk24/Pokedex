@@ -89,11 +89,12 @@
 
                 <com.example.pokedex.utility.LoadingSpinner
                     android:layout_width="match_parent"
+                    android:tint="@color/accent"
                     android:layout_height="match_parent"/>
 
 
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivProfile"
                     android:layout_width="@dimen/_27sdp"
                     android:layout_height="@dimen/_27sdp"
@@ -101,12 +102,10 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:alpha="0.95"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:src="@drawable/pikachu_logo" />
+                    android:layout_marginBottom="5dp" />
 
             </RelativeLayout>
 
@@ -178,10 +177,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/pokeball"
+        android:backgroundTint="@color/accent"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/accent"
         android:layout_marginBottom="16dp"/>
 
 
@@ -277,12 +276,12 @@
                 android:layout_marginStart="12dp"
                 android:textSize="16sp"
                 android:layout_gravity="center_vertical"
-                android:text="Storage"/>
+                android:text="Photos"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_storage"
+                android:src="@drawable/ic_photos"
                 android:foregroundGravity="center_horizontal"
                 android:layout_marginEnd="8dp"
                 android:paddingVertical="8dp"

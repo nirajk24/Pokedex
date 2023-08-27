@@ -31,12 +31,12 @@ class AvatarAdapter(private val pf : MyPreferences) : RecyclerView.Adapter<Avata
     private val diffUtil = object: DiffUtil.ItemCallback<Int>(){  // Created an object of DiffUtil ItemCallBack class
         override fun areItemsTheSame(oldItem: Int, newItem: Int): Boolean {
             // checks if the items are same
-            return oldItem + 10 == newItem  // returns true if item id is same
+            return oldItem== newItem  // returns true if item id is same
         }
 
         override fun areContentsTheSame(oldItem: Int, newItem: Int): Boolean {
             // check if the contents of item same
-            return oldItem + 10 == newItem  // returns true if the items are same
+            return oldItem == newItem  // returns true if the items are same
         }
     }
 

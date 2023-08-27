@@ -53,6 +53,6 @@ class MyPreferences(context: Context?) {
         get() = collectedPokemons.size
 
 
-    var currentAvatar = preferences.getInt(CURRENT_AVATAR, 0)
+    var currentAvatar = preferences.getInt(CURRENT_AVATAR, 2)
         set(value) = preferences.edit().putInt(CURRENT_AVATAR, value).apply()
 }

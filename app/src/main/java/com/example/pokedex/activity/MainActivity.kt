@@ -48,8 +48,10 @@ import com.example.pokedex.R
 import com.example.pokedex.adapter.PokemonAdapter
 import com.example.pokedex.adapter.PokemonGridAdapter
 import com.example.pokedex.databinding.ActivityMainBinding
+import com.example.pokedex.model.PokemonSmall
 import com.example.pokedex.repository.MyPreferences
 import com.example.pokedex.repository.Repository
+import com.example.pokedex.utility.AvatarUtils
 import com.example.pokedex.viewmodel.MainViewModel
 import com.example.pokedex.viewmodel.MainViewModelFactory
 import kotlinx.serialization.encodeToString
@@ -89,28 +91,9 @@ class MainActivity : AppCompatActivity() {
 //        installSplashScreen()
         binding = ActivityMainBinding.inflate(layoutInflater)
         checkThemeDetails()
-
         setContentView(binding.root)
 
-
 //        window.setDecorFitsSystemWindows(false)
-
-
-
-//        dialog = Dialog(this, R.style.FullScreenDialogStyle)
-//        showFullscreenDialog()
-
-//        binding.shimmerLayoutHome.startShimmer()
-//
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            //Do something after 100ms
-//            // Hide shimmer effect
-//            binding.shimmerLayoutHome.stopShimmer()
-//            binding.shimmerLayoutHome.visibility = View.GONE
-//            binding.shimmerCardView.visibility = View.GONE
-//            // Make the view visible again
-//        }, 2000)
-
 
         prepareRecyclerView()
         initializeRecyclerView()
@@ -168,24 +151,6 @@ class MainActivity : AppCompatActivity() {
         isLinearLayout = when(MyPreferences(this).isLinear){
             true -> true
             false -> false
-        }
-    }
-
-
-    private fun checkTheme() {
-        when (MyPreferences(this).darkMode) {
-            0 -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                delegate.applyDayNight()
-            }
-            1 -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                delegate.applyDayNight()
-            }
-            2 -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                delegate.applyDayNight()
-            }
         }
     }
 
@@ -325,12 +290,13 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     pokemonGridAdapter.differ.submitList(filteredPokemons)
                 }
-                if (newText.isNullOrEmpty() ) {
-                    mainMvvm.observePokemonListLiveData().observe(this@MainActivity, Observer {pokemonList ->
-                        if(isLinearLayout) pokemonAdapter.differ.submitList(pokemonList)
-                        else pokemonGridAdapter.differ.submitList(pokemonList)
-                    })
-                }
+
+//                if (newText.isNullOrEmpty() ) {
+//                    mainMvvm.observePokemonListLiveData().observe(this@MainActivity, Observer {pokemonList ->
+//                        if(isLinearLayout) pokemonAdapter.differ.submitList(pokemonList)
+//                        else pokemonGridAdapter.differ.submitList(pokemonList)
+//                    })
+//                }
                 return true
             }
         })
@@ -445,34 +411,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showFullscreenDialog() {
-        // Customize the dialog content here
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.Flying));
-//        }
-
-        dialog.setContentView(R.layout.fullscreen_dialog)
-        dialog.findViewById<Button>(R.id.btnHome).setOnClickListener {
-            hideFullScreenDialog()
-        }
-        dialog.findViewById<ImageView>(R.id.ivBack).setOnClickListener {
-            hideFullScreenDialog()
-        }
-        Log.d("CHECK", window.decorView.toString())
-
-
-//        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        dialog.show()
-    }
-
-    private fun hideFullScreenDialog(){
-        if(dialog.isShowing){
-            dialog.hide()
-        }
-        WindowCompat.setDecorFitsSystemWindows(window, true)
-    }
 
     // Loading Pokemon data from Json
     private fun initializeData() {
@@ -491,9 +429,8 @@ class MainActivity : AppCompatActivity() {
 
     // Preparing Pokemon Recycler View
     private fun prepareRecyclerView() {
-        val assetManager: AssetManager? = assets
 
-        pokemonAdapter = PokemonAdapter(assetManager!!)
+        pokemonAdapter = PokemonAdapter()
         pokemonGridAdapter = PokemonGridAdapter()
 
         binding.rvPokemon.apply {
@@ -511,7 +448,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun View.setMargins(
+    private fun View.setMargins(
         leftMarginDp: Int? = null,
         topMarginDp: Int? = null,
         rightMarginDp: Int? = null,
@@ -600,17 +537,13 @@ class MainActivity : AppCompatActivity() {
                 val base64 = mainMvvm.convertToByte64(selectedImageBitmap!!)
 //                mainMvvm.getPokemonNameByImage(base64)  // Sets the Current Pokemon
 
-
-
-//                dialog = Dialog(this, R.style.FullScreenDialogStyle)
-//                showFullscreenDialog()
                 intentToPokeballActivity(base64)
             }
 
 
         }
 
-    fun intentToPokeballActivity(base64 : String){
+    private fun intentToPokeballActivity(base64 : String){
         val intent = Intent(this, PokeballActivity::class.java)
         intent.putExtra("BASE64", base64)
         var pokemonSmallList = ""
@@ -620,6 +553,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("EXTRA", pokemonSmallList)
         intent.putExtra("POKEMON_SMALL_LIST", pokemonSmallList)
         startActivity(intent)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
     // Launching Storage
     private val choosePictureLauncher: ActivityResultLauncher<Intent> =
@@ -744,6 +678,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        binding.ivProfile.setImageResource(AvatarUtils.avatars[MyPreferences(this).currentAvatar])
 //        if(MyPreferences(this).isChanged){
 //            val intent = Intent(applicationContext, MainActivity::class.java)
 //            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -752,16 +688,6 @@ class MainActivity : AppCompatActivity() {
 //        }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-//        if(MyPreferences(this).isChanged){
-//            val intent = Intent(applicationContext, MainActivity::class.java)
-//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-//            MyPreferences(this).isChanged = false
-//            startActivity(intent)
-//        }
-    }
 
 
 }

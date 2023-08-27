@@ -118,14 +118,18 @@ class MainViewModel(
     fun filterPokemons(searchQuery: String): List<PokemonSmall> {
         val pokemonList = observePokemonListLiveData().value
         if (pokemonList != null) {
-            if(searchQuery.isNotEmpty()){
+            if (searchQuery.isNotEmpty()) {
                 return pokemonList.filter { pokemon ->
                     pokemon.name.contains(searchQuery, ignoreCase = true) ||
                             pokemon.id.contains(searchQuery, ignoreCase = true) ||
-                            pokemon.typeofpokemon.any { type -> type.contains(searchQuery, ignoreCase = true)}
-                }
-            } else
+                            pokemon.typeofpokemon.any { type ->
+                                type.contains(
+                                    searchQuery,
+                                    ignoreCase = true
+                                ) } }
+            }  else {
                 return pokemonList
+            }
         }
         return emptyList()
     }
@@ -140,8 +144,6 @@ class MainViewModel(
 
         return Base64.encodeToString(imageBytes, Base64.DEFAULT)
     }
-
-
 
 
 }
