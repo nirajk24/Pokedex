@@ -75,8 +75,6 @@ class MainActivity : AppCompatActivity() {
 
     private var selectedImageBitmap: Bitmap? = null
 
-    private lateinit var dialog: Dialog
-
     private var isLinearLayout = true
     // Adapter
     private lateinit var pokemonAdapter: PokemonAdapter
@@ -159,64 +157,6 @@ class MainActivity : AppCompatActivity() {
             false -> false
         }
     }
-
-
-//    private fun setUpDialogBox() {
-//
-//        mainMvvm.onApiResult = { pokemonSmall, prob ->
-//
-//            // Pokemon Caught Confirm
-//            if(prob > 0.5) {
-//                Glide.with(this)
-//                    .load(pokemonSmall.imageurl)
-//                    .into(dialog.findViewById(R.id.ivPokemonImage))
-//
-//                dialog.apply {
-//                    findViewById<ConstraintLayout>(R.id.pokemonCaught).visibility = View.VISIBLE
-//                }
-//
-////            ViewCompat.setTransitionName(
-////                dialog.findViewById(R.id.imgCurrentPokemon),
-////                pokemonSmall.name
-////            );
-//
-////            ViewCompat.setTransitionName(holder.binding.ivPokemonThumb, pokemon.name);
-//
-//
-//                // Go to Pokemon Activity
-//                dialog.findViewById<Button>(R.id.btnCollect).setOnClickListener {
-////                dialog.setContentView(0)
-//
-//
-//                    val intent = Intent(this, PokemonActivity::class.java)
-//                    val pokemonList = mainMvvm.getPokemonEvolutionList(pokemonSmall)
-//                    val sharedImageView = dialog.findViewById<ImageView>(R.id.ivPokemonImage)
-//
-//                    val data = Json.encodeToString(pokemonList)
-//                    intent.apply {
-//                        putExtra("TRANSITION_NAME", pokemonSmall.name)
-//                        putExtra("POKEMON", data)
-//                        putExtra("SOURCE", "DIALOG")
-//                    }
-//
-////                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-////                        this,
-////                        sharedImageView,
-////                        pokemonSmall.name
-////                    )
-//
-////                    startActivity(intent, options.toBundle())
-//                    startActivity(intent)
-//
-//                }
-//            } else {
-//                Glide.with(this)
-//                    .load(R.drawable.no_pokemon)
-//                    .downsample(DownsampleStrategy.AT_MOST)
-//                    .into(dialog.findViewById(R.id.ivPokemonImage))
-//            }
-//        }
-//    }
 
 
     private fun setFabButton() {
@@ -528,9 +468,9 @@ class MainActivity : AppCompatActivity() {
                 val imageBitmap = result.data?.extras?.get("data") as Bitmap
                 selectedImageBitmap = Bitmap.createScaledBitmap(imageBitmap, 224, 224, true)
 
-                Log.d("SIZE",
-                    (selectedImageBitmap!!.width.toString() + " "  + selectedImageBitmap!!.height).toString()
-                )
+//                Log.d("SIZE",
+//                    (selectedImageBitmap!!.width.toString() + " "  + selectedImageBitmap!!.height).toString()
+//                )
 
                 // Handle the captured image
                 val base64 = mainMvvm.convertToByte64(selectedImageBitmap!!)
@@ -549,7 +489,7 @@ class MainActivity : AppCompatActivity() {
         mainMvvm.observePokemonListLiveData().observe(this, Observer {
             pokemonSmallList = Json.encodeToString(it)
         })
-        Log.d("EXTRA", pokemonSmallList)
+//        Log.d("EXTRA", pokemonSmallList)
         intent.putExtra("POKEMON_SMALL_LIST", pokemonSmallList)
         startActivity(intent)
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)

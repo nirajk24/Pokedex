@@ -5,9 +5,7 @@ import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.pokedex.R
 import com.example.pokedex.model.Base64Image
 import com.example.pokedex.model.Pokemon
@@ -18,7 +16,6 @@ import com.example.pokedex.repository.Repository
 import com.example.pokedex.retrofit.RetrofitInstance
 import com.example.pokedex.utility.NameToId
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -39,12 +36,6 @@ class MainViewModel(
     private var pokemonList = MutableLiveData<List<PokemonSmall>>()
     fun observePokemonListLiveData() = pokemonList
 
-//    private lateinit var currentPokemon : MutableLiveData<PokemonSmall>
-//    fun observeCurrentPokemon() = currentPokemon
-//    fun setCurrentPokemon(pokemon: PokemonSmall){
-//        currentPokemon.value = pokemon
-//    }
-
 
     fun initializePokemon(inputStream : InputStream){
         val jsonString = inputStream.bufferedReader().use { it.readText() }
@@ -60,28 +51,28 @@ class MainViewModel(
 
         RetrofitInstance.api.getPokemonName(base64Image).enqueue(object: Callback<PokemonName>{
             override fun onResponse(call: Call<PokemonName>, response: Response<PokemonName>) {
-                Log.d("API", response.toString())
+//                Log.d("API", response.toString())
                 if(response.code() != 500 && response.body() != null){
                     val pokemonName: PokemonName = response.body()!!
 
                     val text = pokemonName.class_name.toString() + "\n" + pokemonName.prob
                     val id = NameToId.nameToIdMap[pokemonName.class_name]
-                    Log.d("API", text)
-                    Log.d("API", id.toString())
+//                    Log.d("API", text)
+//                    Log.d("API", id.toString())
                     onApiResult(getPokemonById(id!!), pokemonName.prob.toDouble())
 
-                    Log.d("API", text)
+//                    Log.d("API", text)
 
 //                    binding.tvBase64.text = text
                 } else {
-                    Log.d("API", "RESPONSE BODY NULL")
+//                    Log.d("API", "RESPONSE BODY NULL")
 
                 }
             }
 
             override fun onFailure(call: Call<PokemonName>, t: Throwable) {
                 // Log will give us the reason for Failure through t.message
-                Log.d("API", t.message.toString())
+//                Log.d("API", t.message.toString())
             }
         })
     }
@@ -112,7 +103,7 @@ class MainViewModel(
             val idInt = getIdFromString(id)
             pokemonEvolutionIds.add(idInt)
         }
-        Log.d("CHECK", pokemonEvolutionIds.toString())
+//        Log.d("CHECK", pokemonEvolutionIds.toString())
         return pokemonEvolutionIds
     }
     fun getIdFromString(id: String): Int {

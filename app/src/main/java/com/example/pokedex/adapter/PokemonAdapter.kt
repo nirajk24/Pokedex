@@ -90,7 +90,6 @@ class PokemonAdapter() : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>(
 
             // Setting 2nd Type Card
             if(pokemon.typeofpokemon.size > 1){
-                Log.d("TYPE", pokemon.name + " : " + pokemon.typeofpokemon[1])
                 cvPokemonType2.visibility = View.VISIBLE
 
                 val pokemonType2 = pokemon.typeofpokemon[1]
