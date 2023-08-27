@@ -67,6 +67,8 @@ The Pokedex Android app follows the MVVM (Model-View-ViewModel) architectural pa
 - **View:** Focuses on presenting the user interface elements and handling user interactions. The app's screens, themes, and animations are managed within the View component.
 
 - **ViewModel:** Acts as a bridge between the Model and the View. It holds UI-related data and logic, facilitating communication between components while maintaining data integrity.
+  
+![MVVM](https://github.com/nirajk24/Pokedex/blob/main/Images/viewmodel.png)
 
 By adopting the MVVM architecture, the Pokedex app gains several benefits:
 
