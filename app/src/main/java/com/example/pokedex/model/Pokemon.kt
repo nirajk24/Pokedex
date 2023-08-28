@@ -64,12 +64,13 @@ data class Pokemon(
 fun readCsvLineByIndex(context: Context, resourceId: Int, indices: List<Int>): List<Pokemon> {
     val resultList = mutableListOf<Pokemon>()
 
-    val inputStream = context.resources.openRawResource(resourceId)
-    val reader = CSVReaderBuilder(InputStreamReader(inputStream))
-        .withCSVParser(CSVParserBuilder().withSeparator(',').build())
-        .build()
+
 
     for (index in indices) {
+        val inputStream = context.resources.openRawResource(resourceId)
+        val reader = CSVReaderBuilder(InputStreamReader(inputStream))
+            .withCSVParser(CSVParserBuilder().withSeparator(',').build())
+            .build()
         var lineNumber = 0
         var line: Array<String>?
 
@@ -81,10 +82,11 @@ fun readCsvLineByIndex(context: Context, resourceId: Int, indices: List<Int>): L
             }
             lineNumber++
         }
+        reader.close()
+        inputStream.close()
     }
 
-    reader.close()
-    inputStream.close()
+
 
     return resultList
 }

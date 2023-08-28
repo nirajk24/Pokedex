@@ -385,7 +385,7 @@ class MainActivity : AppCompatActivity() {
                 adapter = pokemonAdapter
 
             } else {
-                setMargins(6, 8, 10, 8)
+                setMargins(10, 12, 14, 12)
                 layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
                 adapter = pokemonGridAdapter
             }
@@ -512,6 +512,7 @@ class MainActivity : AppCompatActivity() {
 //                        showFullscreenDialog()
 
                         intentToPokeballActivity(base64)
+                        imageStream?.close()
                     }
                 } catch (e: IOException) {
                     e.printStackTrace()

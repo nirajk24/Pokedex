@@ -83,17 +83,12 @@ class MainViewModel(
         return pokemon!!
     }
 
-    suspend fun getPokemonEvolutionList(pokemon: PokemonSmall): List<Pokemon> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val specificLineIndices = getEvolutionIds(pokemon)
-                readCsvLineByIndex(application, R.raw.pokemon_csv, specificLineIndices.toMutableList())
-            } catch (e: Exception) {
-                // Handle exception, you might want to throw a custom exception or return an empty list
-                e.printStackTrace()
-                emptyList()
-            }
-        }
+    fun getPokemonEvolutionList(pokemon: PokemonSmall): List<Pokemon> {
+        // Read csv and get list
+        val specificLineIndices = getEvolutionIds(pokemon)
+
+        return readCsvLineByIndex(application, R.raw.pokemon_csv,
+            specificLineIndices.toMutableList())
     }
 
     private fun getEvolutionIds(pokemon: PokemonSmall) : List<Int>{
