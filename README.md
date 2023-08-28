@@ -12,8 +12,8 @@ Welcome to the README file for the Pokedex Android app built with Kotlin. This a
 - [Tech Stack](#tech-stack)
   - [Backend](#backend)
   - [Frontend](#frontend)
+- [Architecture](#architecture)
 - [Usage](#usage)
-- [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
 
