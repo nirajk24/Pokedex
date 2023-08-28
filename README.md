@@ -2,7 +2,7 @@
 
 Welcome to the README file for the Pokedex Android app built with Kotlin. This app integrates an Image Classification Machine Learning model as a backend, hosted on AWS using a Flask API. The app serves as a comprehensive guide to Pokemon, featuring a delightful user interface with support for both dark and light modes.
 
-![Pokedex App Screenshots](/path/to/app/screenshots.png)
+![Pokedex App Screenshots](Images/screenshot_main.jpg)
 
 ## Table of Contents
 
