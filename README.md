@@ -59,7 +59,7 @@ Here are some screenshots showcasing the app's user interface and features:
   - Material Components: Consistent UI elements and themes for an attractive look and feel.
 - **Asynchronous Operations:** Coroutines for handling asynchronous tasks efficiently.
 
-## Architecture: MVVM (Model-View-ViewModel)
+## Architecture
 
 The Pokedex Android app follows the MVVM (Model-View-ViewModel) architectural pattern, facilitating a clean and modular structure for efficient development and maintenance. This pattern divides the app into three distinct components:
 
