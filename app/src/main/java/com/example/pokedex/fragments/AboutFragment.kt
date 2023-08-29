@@ -106,43 +106,6 @@ class AboutFragment : Fragment() {
         val shinyFrontUrl = baseUrl + "shiny/" + pokemon.name.lowercase() + ".gif"
         val shinyBackUrl = baseUrl + "back-shiny/" + pokemon.name.lowercase() + ".gif"
 
-//        val circularProgressDrawable = CircularProgressDrawable(requireActivity())
-//        circularProgressDrawable.strokeWidth = 5f
-//        circularProgressDrawable.centerRadius = 30f
-//        circularProgressDrawable.start()
-
-
-//        val assetManager: AssetManager? = context?.assets
-//
-//        try {
-//            val id = getIdFromString(pokemon.id)
-//            // Open the image file as an InputStream using the context's assetManager
-//            val inputStream = assetManager?.open("images/$id.png")
-//
-//            // Use BitmapFactory to decode the InputStream into a Bitmap
-//            bitmap = BitmapFactory.decodeStream(inputStream)
-//
-//            // Convert the InputStream to a Drawable
-//            val placeholderDrawable: Drawable? = inputStream?.let {
-//                Drawable.createFromStream(it, null)
-//            }
-////            loadImageUsingGlide(frontUrl, binding.ivFrontSprite, placeholderDrawable!!)
-////            loadImageUsingGlide(backUrl, binding.ivBackSprite, placeholderDrawable)
-////            loadImageUsingGlide(shinyFrontUrl, binding.ivShinyFrontSprite, placeholderDrawable!!)
-////            loadImageUsingGlide(shinyBackUrl, binding.ivShinyBackSprite, placeholderDrawable!!)
-//            Log.d("CHECK", "PLACEHOLDER : " + placeholderDrawable.toString())
-//            Log.d("CHECK", "BITMAP : $bitmap")
-//
-//
-//
-//
-//
-//        } catch (e: IOException) {
-//            // Handle exceptions
-//            e.printStackTrace()
-//        }
-
-
 
         Glide.with(requireActivity())
             .asGif()

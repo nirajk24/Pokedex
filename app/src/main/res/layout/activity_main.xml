@@ -7,35 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-
-<!--    <androidx.cardview.widget.CardView-->
-<!--        android:id="@+id/shimmerCardView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:visibility="gone"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        android:layout_height="match_parent">-->
-
-
-<!--        <com.facebook.shimmer.ShimmerFrameLayout-->
-<!--            android:id="@+id/shimmerLayoutHome"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent">-->
-
-<!--                <include layout="@layout/shimmer_layout_home2" />-->
-
-<!--            </LinearLayout>-->
-<!--        </com.facebook.shimmer.ShimmerFrameLayout>-->
-<!--    </androidx.cardview.widget.CardView>-->
-
-
-
     <LinearLayout
         android:id="@+id/linearHeader"
         android:layout_width="match_parent"
@@ -123,35 +94,6 @@
             android:layout_marginHorizontal="8dp"
             android:animateLayoutChanges="true"
             android:layout_marginBottom="10dp" />
-
-
-
-
-        <!--        <LinearLayout-->
-        <!--            android:id="@+id/imgSearch"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="50dp"-->
-        <!--            android:orientation="horizontal"-->
-        <!--            android:layout_marginHorizontal="8dp"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            android:layout_marginBottom="@dimen/_8sdp">-->
-
-        <!--            <EditText-->
-        <!--                android:id="@+id/etSearchBox"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="match_parent"-->
-        <!--                android:textSize="@dimen/_12sdp"-->
-        <!--                android:gravity="center_vertical"-->
-        <!--                android:layout_weight="1"-->
-        <!--                android:background="@drawable/search_box_background"-->
-        <!--                android:text="Search Pokemon.."-->
-        <!--                android:paddingStart="16dp"-->
-        <!--                android:paddingEnd="16dp"-->
-        <!--                app:drawableEndCompat="@drawable/ic_search" />-->
-
-
 
 
 
