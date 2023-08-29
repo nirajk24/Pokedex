@@ -12,8 +12,8 @@ Welcome to the README file for the Pokedex Android app built with Kotlin. This a
 - [Tech Stack](#tech-stack)
   - [Backend](#backend)
   - [Frontend](#frontend)
+- [Architecture](#architecture)
 - [Usage](#usage)
-- [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
 
@@ -25,6 +25,7 @@ The Pokedex Android app is designed to provide users with an intuitive and capti
 
 - Browse and explore information about all Pokemon generations.
 - Switch between dark and light themes for a comfortable experience.
+- Integrated Search feature by name, type or number for ease of access
 - Use the camera or upload images to identify Generation 1 Pokemon.
 - Collect all Generation 1 Pokemon by scanning them with the integrated feature.
 - Enjoy smooth transitions and animations for an appealing interface.
@@ -33,11 +34,11 @@ The Pokedex Android app is designed to provide users with an intuitive and capti
 
 Here are some screenshots showcasing the app's user interface and features:
 
-![Screenshot 1](/path/to/screenshots/screenshot1.png)
-*Caption for Screenshot 1*
+![Screenshot 1](/Images/screenshot_light.jpg)
+<p align="center"><i>Light Mode</i></p>
 
-![Screenshot 2](/path/to/screenshots/screenshot2.png)
-*Caption for Screenshot 2*
+![Screenshot 2](/Images/screenshot_dark.jpg)
+<p align="center"><i>Dark Mode</i></p>
 
 ## Tech Stack
 
@@ -58,7 +59,7 @@ Here are some screenshots showcasing the app's user interface and features:
   - Material Components: Consistent UI elements and themes for an attractive look and feel.
 - **Asynchronous Operations:** Coroutines for handling asynchronous tasks efficiently.
 
-## Architecture: MVVM (Model-View-ViewModel)
+## Architecture
 
 The Pokedex Android app follows the MVVM (Model-View-ViewModel) architectural pattern, facilitating a clean and modular structure for efficient development and maintenance. This pattern divides the app into three distinct components:
 
