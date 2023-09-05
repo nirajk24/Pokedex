@@ -58,7 +58,7 @@
                 android:layout_height="@dimen/_35sdp"
                 android:layout_gravity="center_vertical">
 
-                <com.example.pokedex.utility.LoadingSpinner
+                <com.affinity.pokedex.utility.LoadingSpinner
                     android:layout_width="match_parent"
                     android:tint="@color/accent"
                     android:layout_height="match_parent"/>

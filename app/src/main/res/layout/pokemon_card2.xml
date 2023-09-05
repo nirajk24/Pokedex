@@ -135,7 +135,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <com.example.pokedex.utility.FadingImageView
+        <com.affinity.pokedex.utility.FadingImageView
             android:layout_width="160dp"
             android:layout_height="131dp"
             android:layout_gravity="end"
@@ -157,7 +157,7 @@
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <com.example.pokedex.utility.FadingImageView
+    <com.affinity.pokedex.utility.FadingImageView
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_marginTop="24dp"

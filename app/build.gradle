@@ -4,17 +4,16 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'com.google.gms.google-services'
 
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.0'
 }
 
 android {
-    namespace 'com.example.pokedex'
+    namespace 'com.affinity.pokedex'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.pokedex"
+        applicationId "com.affinity.pokedex"
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -111,6 +110,8 @@ dependencies {
 
     // Splash Screen
     implementation "androidx.core:core-splashscreen:1.0.1"
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
 
 
 }
